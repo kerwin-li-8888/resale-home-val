@@ -1,0 +1,9 @@
+# 上游审计与基线目录：不纳入上级 git 仓库跟踪
+upstream-audit/
+upstream-baseline/
+
+# Python 与本地数据
+__pycache__/
+*.pyc
+.venv/
+data/

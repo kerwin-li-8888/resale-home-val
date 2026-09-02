@@ -1,0 +1,56 @@
+[project]
+name = "compsval"
+version = "0.1.0"
+description = "ExampleCity target-district residential comparable-sales valuation engine (skeleton, derived from Philly Fair Measure)"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.12"
+dependencies = [
+    "duckdb>=1.0",
+    "httpx>=0.28",
+    "openpyxl>=3.1.2",
+    "pillow>=12.3",
+    "polars>=1.42.1",
+    "pyarrow>=17",
+    "pydantic>=2.7",
+    "PyYAML>=6.0",
+    "tzdata>=2026.3",
+]
+
+[project.scripts]
+compsval = "compsval.cli:main"
+
+[dependency-groups]
+dev = [
+    "mypy>=2.1.0",
+    "pytest>=8.2",
+    "ruff>=0.5",
+    "types-openpyxl>=3.1",
+    "types-PyYAML>=6.0",
+]
+
+[build-system]
+requires = ["uv_build>=0.11,<0.12"]
+build-backend = "uv_build"
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+disallow_any_generics = false
+disallow_untyped_calls = false
+
+[[tool.mypy.overrides]]
+module = ["duckdb.*", "polars.*", "pyarrow.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+addopts = "-ra"
+testpaths = ["tests"]

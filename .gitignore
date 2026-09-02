@@ -1,0 +1,12 @@
+# Runtime artifacts (second line of defense; the build uses a whitelist manifest)
+.venv/
+data/
+__pycache__/
+*.pyc
+.pytest_cache/
+node_modules/
+examples/out/
+
+# Local upstream audit artifacts (should never appear in a release checkout)
+upstream-audit/
+upstream-baseline/
