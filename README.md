@@ -1,21 +1,23 @@
-# compsval — 可解释的住宅比较法估值引擎
+# resale-home-val — 可解释的二手房比较法估值引擎
 
-> Transparent, evidence-chained comparable-sales valuation for residential
-> properties in a bounded urban submarket. 会拒绝错误精确的估值系统。
+> Transparent, evidence-chained comparable-sales valuation for resale
+> residential properties in a bounded urban submarket. 会拒绝错误精确的估值系统。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.12%2B-blue.svg)](pyproject.toml)
 
+> 命名说明：仓库名 `resale-home-val`；Python 包与 CLI 名为 `compsval`（comparable-sales，历史沿用）。
+
 ## 这是什么
 
-`compsval` 是一个市场比较法（ comparable-sales / sales-comparison approach ）住宅估值引擎。它对目标板块内一套普通二手商品住宅，在明确估值时点与数据截点下，输出：
+`resale-home-val` 是一个市场比较法（ comparable-sales / sales-comparison approach ）二手房估值引擎。它对目标板块内一套普通二手商品住宅，在明确估值时点与数据截点下，输出：
 
 1. **估值中心值**在哪里；
 2. **合理区间**有多宽；
 3. 这一结果**有多可信**（高/中/低/不足 + 分项理由）；
 4. **哪些案例与判断**导致了这个结果。
 
-每次估值只能处于四种状态之一：`正式估值`、`参考估值`、`信息不足`、`不适用`。系统宁可说"不知道"，也不输出伪装成精确答案的数字。
+每次估值只能处于四种状态之一：`正式估值`、`参考估值`、`信息不足`、`不适用`。系统宁可说"不知道"，也不输出伪装成精确答案的数字。它不是黑盒 AVM：方法论是估价行业的比较法，人工复核是必经环节，证据链全程可追溯。
 
 ## 核心特性
 
@@ -33,8 +35,8 @@
 要求：Python 3.12+、[uv](https://docs.astral.sh/uv/)。
 
 ```bash
-git clone https://github.com/<your-org>/compsval.git
-cd compsval/03-估值引擎
+git clone https://github.com/kerwin-li-8888/resale-home-val.git
+cd resale-home-val/03-估值引擎
 uv sync
 uv run pytest              # 全量离线测试
 uv run compsval version    # CLI 冒烟
@@ -46,14 +48,14 @@ uv run compsval version    # CLI 冒烟
 ## 仓库结构
 
 ```text
-compsval/
+resale-home-val/
 ├─ 03-估值引擎/            # 引擎工程目录
 │   ├─ src/compsval/       # 引擎源码（contract/entities/ingest/valuation/reporting）
 │   ├─ tests/              # 全量离线测试
 │   ├─ UPSTREAM.md         # 上游来源逐文件登记（开源合规审计）
 │   └─ upstream/           # 上游 LICENSE 原文存档
 ├─ openspec/
-│   ├─ specs/              # 当前行为权威（13 个能力规格）
+│   ├─ specs/              # 当前行为权威（13 个能力规格 + 开源发布门禁）
 │   └─ adopt/              # OpenSpec 治理采用记录
 ├─ LICENSE / NOTICE        # MIT + 上游归属声明
 └─ ADAPTATION.md           # 移植到你所在城市的改造指南
