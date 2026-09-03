@@ -1,5 +1,7 @@
 # resale-home-val — 可解释的二手房比较法估值引擎
 
+[English](README.en.md) | 简体中文
+
 > Transparent, evidence-chained comparable-sales valuation for resale
 > residential properties in a bounded urban submarket. 会拒绝错误精确的估值系统。
 
