@@ -74,7 +74,7 @@ proposal 判定表 SHALL 以文件形式冻结为构建输入并登记进 manife
 
 ### Requirement: 构建 SHALL 追加式幂等且受保护资产不变
 
-实体构建 SHALL 为追加式确定性重建：构建前 SHALL 记录 `data/entities/`、`data/staged/`、`05-估值报告/` 与 `01-数据/census/community-census-v1-2/`、`community-census-v1-2-r1/` 的基线 SHA256；构建产物（community.parquet 变更、两张新表、别名追加）SHALL 各带 DerivedManifest（输入指纹、行数、构建时间、代码版本）与映射记录；同输入重跑 SHALL 产出逐字节一致；`data/staged/`、`05-估值报告/` 与两个 v1.2 普查目录 SHALL 逐字节不变；UNKNOWN SHALL 保持为合法值，SHALL NOT 补造。
+实体构建 SHALL 为追加式确定性重建：构建前 SHALL 记录 `data/entities/`、`data/staged/`、估值报告目录与 v1.2 普查版本目录、v1.2 普查 r1 刷新版目录的基线 SHA256；构建产物（community.parquet 变更、两张新表、别名追加）SHALL 各带 DerivedManifest（输入指纹、行数、构建时间、代码版本）与映射记录；同输入重跑 SHALL 产出逐字节一致；`data/staged/`、估值报告目录与两个 v1.2 普查目录 SHALL 逐字节不变；UNKNOWN SHALL 保持为合法值，SHALL NOT 补造。
 
 #### Scenario: 重跑幂等
 

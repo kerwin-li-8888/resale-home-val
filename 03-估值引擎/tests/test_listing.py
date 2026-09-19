@@ -19,20 +19,20 @@ from pathlib import Path
 
 import pyarrow as pa
 
-from compsval.contract.models import (
+from gz_property_valuation.contract.models import (
     EventDatePrecision,
     ListingPriceBenchmark,
     ListingStatus,
 )
-from compsval.ingest.listing import (
+from gz_property_valuation.ingest.listing import (
     has_listing_evidence,
     listing_date_of,
     listing_event_table,
     listing_status_of,
     write_listing_event_stage,
 )
-from compsval.ingest.manifests import DerivedManifest, InputRef
-from compsval.ingest.parsers.lianjia import LianjiaRecord, parse_lianjia_txt
+from gz_property_valuation.ingest.manifests import DerivedManifest, InputRef
+from gz_property_valuation.ingest.parsers.lianjia import LianjiaRecord, parse_lianjia_txt
 
 _NOW = datetime(2026, 8, 21, 3, 14, 0)
 

@@ -13,14 +13,14 @@ from pathlib import Path
 
 import pyarrow.parquet as pq
 
-from compsval.ingest.floorplan_ocr import (
+from gz_property_valuation.ingest.floorplan_ocr import (
     OCR_MODEL_ID,
     OcrRunRecord,
     OcrState,
     OcrTaskRecord,
     raw_response_filename,
 )
-from compsval.ingest.floorplan_ocr_parse import (
+from gz_property_valuation.ingest.floorplan_ocr_parse import (
     COORD_VERSION,
     OCR_RESPONSE_PARSE_VERSION,
     WORD_STAGED_FILENAME,
@@ -137,7 +137,7 @@ def test_extract_missing_words_info_returns_empty() -> None:
 
 
 def test_normalize_location_forms() -> None:
-    from compsval.ingest.floorplan_ocr_parse import _normalize_location
+    from gz_property_valuation.ingest.floorplan_ocr_parse import _normalize_location
 
     assert _normalize_location([[1, 2], [3, 4]]) == [[1.0, 2.0], [3.0, 4.0]]
     assert _normalize_location({"x": 1, "y": 2}) == [[1.0, 2.0]]
@@ -150,7 +150,7 @@ def test_normalize_location_forms() -> None:
 
 def test_normalize_location_flat_polygon() -> None:
     """EXTFP3-C#F6：真实 Qwen advanced_recognition 的 location 为平铺 8 数四角多边形。"""
-    from compsval.ingest.floorplan_ocr_parse import _normalize_location
+    from gz_property_valuation.ingest.floorplan_ocr_parse import _normalize_location
 
     assert _normalize_location([582, 29, 851, 29, 851, 61, 582, 61]) == [
         [582.0, 29.0],
@@ -166,7 +166,7 @@ def test_normalize_location_flat_polygon() -> None:
 
 
 def test_normalize_rotate_rect() -> None:
-    from compsval.ingest.floorplan_ocr_parse import _normalize_rotate_rect
+    from gz_property_valuation.ingest.floorplan_ocr_parse import _normalize_rotate_rect
 
     assert _normalize_rotate_rect({"center": [1, 2], "width": 3, "height": 4, "angle": 5}) == {
         "center": [[1.0, 2.0]],
@@ -182,7 +182,7 @@ def test_normalize_rotate_rect() -> None:
 def test_normalize_rotate_rect_flat_5() -> None:
     """EXTFP3-C#F6：真实 Qwen advanced_recognition 的 rotate_rect 为平铺 5 数
     [cx, cy, w, h, angle]。"""
-    from compsval.ingest.floorplan_ocr_parse import _normalize_rotate_rect
+    from gz_property_valuation.ingest.floorplan_ocr_parse import _normalize_rotate_rect
 
     assert _normalize_rotate_rect([716, 45, 32, 269, 90]) == {
         "center": [[716.0, 45.0]],
@@ -503,7 +503,7 @@ def test_parse_ocr_run_directory_without_data_dir(tmp_path: Path) -> None:
 def test_parse_ocr_run_directory_missing_run_record(tmp_path: Path) -> None:
     import pytest
 
-    from compsval.ingest.floorplan_ocr_parse import load_ocr_run_record
+    from gz_property_valuation.ingest.floorplan_ocr_parse import load_ocr_run_record
 
     with pytest.raises(FileNotFoundError):
         load_ocr_run_record(tmp_path / "not-exists")

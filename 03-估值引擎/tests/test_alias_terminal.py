@@ -14,12 +14,12 @@ from pathlib import Path
 import pyarrow as pa
 import pytest
 
-from compsval.contract.models import AliasConflictStatus
-from compsval.entities.alias_terminal import (
+from gz_property_valuation.contract.models import AliasConflictStatus
+from gz_property_valuation.entities.alias_terminal import (
     apply_alias_terminal_overrides,
     load_terminal_overrides,
 )
-from compsval.entities.backfill import load_community_lookup, resolve_community_id
+from gz_property_valuation.entities.backfill import load_community_lookup, resolve_community_id
 
 # overrides 文件随 change 归档迁移（2026-09-01）；候选回落保持测试可复现。
 _OVERRIDE_CANDIDATES = (

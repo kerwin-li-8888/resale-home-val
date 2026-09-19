@@ -19,12 +19,12 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 import pytest
 
-from compsval.contract.models import CompCandidate, SubjectProperty
-from compsval.valuation.candidate import (
+from gz_property_valuation.contract.models import CompCandidate, SubjectProperty
+from gz_property_valuation.valuation.candidate import (
     COMP_CANDIDATE_FILENAME,
     VALUATION_LAYER,
 )
-from compsval.valuation.difference import (
+from gz_property_valuation.valuation.difference import (
     ADJUSTMENT_TYPE_DIFFERENCE,
     ComparableAttributes,
     DifferenceAdjustmentPolicy,
@@ -34,7 +34,7 @@ from compsval.valuation.difference import (
     apply_difference_adjustments,
     comp_difference_table,
 )
-from compsval.valuation.time_adjustment import (
+from gz_property_valuation.valuation.time_adjustment import (
     COMP_ADJUSTMENT_FILENAME,
     EvidenceStrength,
 )

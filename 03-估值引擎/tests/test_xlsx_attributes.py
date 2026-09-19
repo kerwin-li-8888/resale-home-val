@@ -15,8 +15,8 @@ import pyarrow.parquet as pq
 import pytest
 from openpyxl import Workbook
 
-from compsval.ingest.manifests import read_derived_manifest
-from compsval.ingest.xlsx_attributes import (
+from gz_property_valuation.ingest.manifests import read_derived_manifest
+from gz_property_valuation.ingest.xlsx_attributes import (
     ATTRIBUTE_COLUMNS,
     ATTRIBUTES_RULE_VERSION,
     norm_decoration,
@@ -25,8 +25,8 @@ from compsval.ingest.xlsx_attributes import (
     parse_floor,
     parse_year,
 )
-from compsval.ingest.xlsx_parse import FieldParseStatus
-from compsval.ingest.xlsx_stage import (
+from gz_property_valuation.ingest.xlsx_parse import FieldParseStatus
+from gz_property_valuation.ingest.xlsx_stage import (
     ORDINARY_FILENAME,
     SALE_RECORD_FILENAME,
     read_current_run,

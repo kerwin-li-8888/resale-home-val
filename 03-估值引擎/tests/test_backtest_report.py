@@ -20,17 +20,17 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 import pytest
 
-from compsval.reporting.backtest_report import (
+from gz_property_valuation.reporting.backtest_report import (
     _safe_dir_name,
     build_backtest_report,
 )
-from compsval.reporting.envelope import (
+from gz_property_valuation.reporting.envelope import (
     InvalidInputError,
     MissingDependencyError,
     VersionMismatchError,
 )
-from compsval.reporting.run_show import run_versions
-from compsval.valuation.backtest import (
+from gz_property_valuation.reporting.run_show import run_versions
+from gz_property_valuation.valuation.backtest import (
     BacktestConfig,
     area_band,
     compute_grouped_metrics,
@@ -38,7 +38,7 @@ from compsval.valuation.backtest import (
     over_performance_groups,
     run_backtest,
 )
-from compsval.valuation.candidate import (
+from gz_property_valuation.valuation.candidate import (
     VALUATION_LAYER,
     VALUATION_RUN_FILENAME,
 )
@@ -259,7 +259,7 @@ def test_run_manifest_warns_on_unmatched_targets(tmp_path: Path) -> None:
     """覆盖受限（存在未匹配目标）时运行清单与报告如实警告（不假装覆盖）。"""
     lake = tmp_path / "lake"
     write_synthetic_lake(lake)
-    from compsval.ingest.stage import MARTS_LAYER, VALID_SALE_FILENAME
+    from gz_property_valuation.ingest.stage import MARTS_LAYER, VALID_SALE_FILENAME
 
     base = synthetic_valid_sale()
     # 复制一条成交并置空 community_id → 回放目标将被跳过（未匹配小区）
@@ -361,9 +361,9 @@ def test_cli_report_build_envelope_versions_backfilled(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
     """report build 包络 data_version/rule_version 从 run 表填充（回归）。"""
-    from compsval import cli
-    from compsval.contract.models import SubjectProperty
-    from compsval.valuation.estimate import run_estimate
+    from gz_property_valuation import cli
+    from gz_property_valuation.contract.models import SubjectProperty
+    from gz_property_valuation.valuation.estimate import run_estimate
     from tests.test_review_apply import _COMMUNITY, _VAL_DATE
     from tests.test_review_apply import _seed_data as seed_review
 
@@ -408,12 +408,12 @@ def test_safe_dir_name_truncates_long_run_id_deterministically() -> None:
 
 
 # ---------------------------------------------------------------------------
-# CLI：compsval backtest report 退出码
+# CLI：gz_property_valuation backtest report 退出码
 # ---------------------------------------------------------------------------
 
 
 def test_cli_backtest_report_valid(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    from compsval import cli
+    from gz_property_valuation import cli
 
     lake = tmp_path / "lake"
     write_synthetic_lake(lake)
@@ -437,7 +437,7 @@ def test_cli_backtest_report_valid(tmp_path: Path, capsys: pytest.CaptureFixture
 def test_cli_backtest_report_run_id_mismatch(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    from compsval import cli
+    from gz_property_valuation import cli
 
     lake = tmp_path / "lake"
     write_synthetic_lake(lake)
@@ -458,7 +458,7 @@ def test_cli_backtest_report_run_id_mismatch(
 def test_cli_backtest_version_mismatch_exit_4(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    from compsval import cli
+    from gz_property_valuation import cli
 
     lake = tmp_path / "lake"
     write_synthetic_lake(lake)

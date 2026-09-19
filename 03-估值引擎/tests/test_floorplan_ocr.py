@@ -23,13 +23,13 @@ import httpx
 import pytest
 from PIL import Image
 
-from compsval.ingest.floorplan_asset import (
+from gz_property_valuation.ingest.floorplan_asset import (
     ASSET_MANIFEST_FILENAME,
     AssetStatus,
     FloorplanAsset,
     FloorplanAssetRun,
 )
-from compsval.ingest.floorplan_ocr import (
+from gz_property_valuation.ingest.floorplan_ocr import (
     OCR_PARSER_VERSION,
     OCR_REQUESTER_VERSION,
     STATE_FILENAME,
@@ -47,7 +47,7 @@ from compsval.ingest.floorplan_ocr import (
     run_ocr_batch,
     transition,
 )
-from compsval.ingest.floorplan_ocr_contract import (
+from gz_property_valuation.ingest.floorplan_ocr_contract import (
     OCR_MODEL_ID,
     OcrCostConfig,
     OcrCostGate,
@@ -721,8 +721,8 @@ def test_run_ocr_batch_force_new_run(tmp_path: Path) -> None:
 def test_raw_response_filename_stays_within_max_path() -> None:
     """EXTFP3-H#MAX_PATH 回归：force-new-run 长 run_id 下原始响应路径须短于 260。
 
-    实测基线（2026-08-27）：OCR 输出根目录 117 字符 + force-new-run run 目录
-    ``run_floorplan-ocr-data_selection_l-20260827T092014Z``（51 字符）+ 旧文件名
+    实测基线：OCR 输出根目录 117 字符 + force-new-run run 目录
+    ``run_floorplan-ocr-data_selection_l-20000101T000008Z``（51 字符）+ 旧文件名
     ``raw_response_<64hex>.json``（82 字符）+ ``.incomplete`` 中间后缀（11 字符）
     = 263 > Windows MAX_PATH（260），H9 复跑落盘 FileNotFoundError。
     修复：文件名内 task_id 截断为 24 hex（42 字符），全路径 + .incomplete ≤ 223。
@@ -1214,7 +1214,7 @@ def test_run_ocr_batch_connection_pool_limits_match_concurrency(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     """任务 2.1：HTTP 连接池按并发档位显式配置（max/keepalive 与并发数对齐）。"""
-    import compsval.ingest.floorplan_ocr as ocr_mod
+    import gz_property_valuation.ingest.floorplan_ocr as ocr_mod
 
     captured: dict[str, httpx.Limits] = {}
     original_client = ocr_mod.httpx.Client

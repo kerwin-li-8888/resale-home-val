@@ -2,7 +2,7 @@
 
 用 tmp_path 合成的小字节文件验证：字节守恒、manifest/MIME/RawSnapshot 登记、
 catalog 可见性、单快照语义、原子写、schema 向后兼容与 CLI 行为。绝不触碰真实
-外部数据文件，也不访问网络。
+外源数据文件，也不访问网络。
 """
 
 from __future__ import annotations
@@ -13,15 +13,15 @@ from pathlib import Path
 
 import pytest
 
-from compsval import cli
-from compsval.catalog import list_snapshots
-from compsval.contract.models import (
+from gz_property_valuation import cli
+from gz_property_valuation.catalog import list_snapshots
+from gz_property_valuation.contract.models import (
     RawSnapshot,
     SnapshotFormat,
     SnapshotParseStatus,
 )
-from compsval.contract.registry import SOURCE_ID_BY_DIR
-from compsval.ingest.binary_snapshot import (
+from gz_property_valuation.contract.registry import SOURCE_ID_BY_DIR
+from gz_property_valuation.ingest.binary_snapshot import (
     BINARY_FILENAME,
     PROVENANCE_FILENAME,
     attach_binary_provenance,
@@ -31,14 +31,14 @@ from compsval.ingest.binary_snapshot import (
     read_binary_provenance,
     write_binary_snapshot,
 )
-from compsval.ingest.manifests import SnapshotManifest, read_manifest
+from gz_property_valuation.ingest.manifests import SnapshotManifest, read_manifest
 
 XLSX_MIME = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 _FETCHED_AT = datetime(2026, 8, 24, 0, 0, 0, tzinfo=UTC)
 
 
 def _make_raw_file(tmp_path: Path, name: str = "原始数据.xlsx") -> Path:
-    """真实 XLSX（含成交日期列）——`compsval ingest binary` 的 XLSX 探针需可解析。"""
+    """真实 XLSX（含成交日期列）——`gz_property_valuation ingest binary` 的 XLSX 探针需可解析。"""
     from datetime import datetime as _dt
 
     from openpyxl import Workbook
@@ -260,8 +260,8 @@ def test_binary_snapshot_visible_in_catalog(tmp_path: Path) -> None:
 
 
 def test_connect_ignores_binary_snapshot_parquet_read(tmp_path: Path) -> None:
-    """RV-EXTFP1-B-01#F1 修复：含二进制快照的湖 connect()/compsval sql 不得把 data.bin 当 parquet 读。"""
-    from compsval import catalog
+    """RV-EXTFP1-B-01#F1 修复：含二进制快照的湖 connect()/gz_property_valuation sql 不得把 data.bin 当 parquet 读。"""
+    from gz_property_valuation import catalog
 
     src = _make_raw_file(tmp_path)
     lake = tmp_path / "lake"
@@ -279,7 +279,7 @@ def test_connect_ignores_binary_snapshot_parquet_read(tmp_path: Path) -> None:
     finally:
         con.close()
 
-    # CLI compsval sql 在同一湖上可用（不被 data.bin 破坏）
+    # CLI gz_property_valuation sql 在同一湖上可用（不被 data.bin 破坏）
     assert cli.main(["sql", "SELECT 1 AS x", "--data-dir", str(lake)]) == 0
 
 

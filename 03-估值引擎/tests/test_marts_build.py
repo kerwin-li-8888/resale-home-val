@@ -8,9 +8,9 @@ from pathlib import Path
 import pyarrow as pa
 import pytest
 
-from compsval import cli
-from compsval.ingest.import_file import import_local_file
-from compsval.ingest.marts_build import (
+from gz_property_valuation import cli
+from gz_property_valuation.ingest.import_file import import_local_file
+from gz_property_valuation.ingest.marts_build import (
     LIANJIA_COMMUNITY_REGISTRY,
     backfill_lianjia_layouts,
     build_combined_marts,
@@ -19,9 +19,9 @@ from compsval.ingest.marts_build import (
     merge_snapshots,
     reconstruct_records,
 )
-from compsval.ingest.parsers.lianjia import LianjiaRecord, parse_lianjia_txt
-from compsval.ingest.snapshots import write_raw_snapshot
-from compsval.ingest.stage import valid_sale_table
+from gz_property_valuation.ingest.parsers.lianjia import LianjiaRecord, parse_lianjia_txt
+from gz_property_valuation.ingest.snapshots import write_raw_snapshot
+from gz_property_valuation.ingest.stage import valid_sale_table
 
 _LIANJIA_TS = datetime(2026, 8, 21, 0, 0, 0, tzinfo=UTC)
 _LJ_CHENGJIAO_TS = datetime(2026, 8, 23, 12, 0, 0, tzinfo=UTC)
@@ -108,7 +108,7 @@ _LJ_CHENGJIAO_TXT = [
 
 def _seed_lianjia_chengjiao(lake: Path) -> None:
     """链家成交 CSV 快照（LJ-D 形状：write_lianjia_csv → import_local_file）。"""
-    from compsval.ingest.parsers.lianjia_html import write_lianjia_csv
+    from gz_property_valuation.ingest.parsers.lianjia_html import write_lianjia_csv
 
     csv_path = lake / "evidence" / "lianjia_chengjiao.csv"
     csv_path.parent.mkdir(parents=True, exist_ok=True)
@@ -145,7 +145,7 @@ def _sale_rows_table(rows: list[dict[str, object]]) -> pa.Table:
             blocks.append(f"挂牌{r['listing_wan']}万成交周期{r.get('days', 60)}天")
         blocks.append("测试免费咨询")
     records = parse_lianjia_txt(blocks)
-    from compsval.ingest.clean import clean_sales, sale_event_table
+    from gz_property_valuation.ingest.clean import clean_sales, sale_event_table
 
     cleaned, _ = clean_sales(records)
     return sale_event_table(
@@ -261,7 +261,7 @@ def test_cross_source_dedup_missing_identity_untouched() -> None:
 
 def test_unique_sale_event_ids_across_snapshots() -> None:
     """合并后 sale_event_id 全局唯一（跨快照相同行号撞号防护）。"""
-    from compsval.ingest.marts_build import _unique_sale_event_ids
+    from gz_property_valuation.ingest.marts_build import _unique_sale_event_ids
 
     table = pa.table(
         {
@@ -318,14 +318,14 @@ def test_backfill_lianjia_layouts_no_match_untouched() -> None:
 
 def test_lianjia_extended_lookup_registry() -> None:
     """链家成交社区注册表并入回填查找表；未注册小区仍 UNMATCHED。"""
-    from compsval.entities.backfill import (
+    from gz_property_valuation.entities.backfill import (
         CommunityIdLookup,
         resolve_community_id,
     )
 
     empty = CommunityIdLookup(canonical={}, alias_consistent={}, blocked={})
     lookup = lianjia_extended_lookup(empty)
-    cid, _outcome, reason = resolve_community_id("示例小区166", lookup)
+    cid, _sub_area, _outcome, reason = resolve_community_id("示例小区166", lookup)
     assert cid == "C-XXXX0122"
     assert "链家成交社区注册表" in reason
     # 名录外/待核小区（楹隆天悦）不入注册表 → 未匹配
@@ -454,7 +454,7 @@ def test_build_combined_marts_no_sources_fails(tmp_path: Path) -> None:
 
 
 # ---------------------------------------------------------------------------
-# CLI：compsval data marts-build
+# CLI：gz_property_valuation data marts-build
 # ---------------------------------------------------------------------------
 
 

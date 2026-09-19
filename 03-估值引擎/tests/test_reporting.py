@@ -23,15 +23,15 @@ import pyarrow.parquet as pq
 import pytest
 from pydantic import ValidationError
 
-from compsval import cli
-from compsval.contract.models import SubjectProperty
-from compsval.ingest.manifests import (
+from gz_property_valuation import cli
+from gz_property_valuation.contract.models import SubjectProperty
+from gz_property_valuation.ingest.manifests import (
     DerivedManifest,
     InputRef,
     write_derived_manifest,
 )
-from compsval.ingest.stage import MARTS_LAYER, VALID_SALE_FILENAME
-from compsval.reporting.envelope import (
+from gz_property_valuation.ingest.stage import MARTS_LAYER, VALID_SALE_FILENAME
+from gz_property_valuation.reporting.envelope import (
     EXIT_CODE_LABELS,
     EXIT_INTERNAL_ERROR,
     EXIT_INVALID_INPUT,
@@ -48,14 +48,14 @@ from compsval.reporting.envelope import (
     VersionMismatchError,
     envelope_from_error,
 )
-from compsval.reporting.markdown import (
+from gz_property_valuation.reporting.markdown import (
     REPORT_FILENAME,
     build_report_markdown,
     report_path_for,
 )
-from compsval.reporting.run_show import show_run
-from compsval.valuation.candidate import DEFAULT_RULE_VERSION
-from compsval.valuation.estimate import run_estimate
+from gz_property_valuation.reporting.run_show import show_run
+from gz_property_valuation.valuation.candidate import DEFAULT_RULE_VERSION
+from gz_property_valuation.valuation.estimate import run_estimate
 
 
 def test_envelope_has_exact_section_10_3_fields() -> None:
@@ -167,7 +167,7 @@ def test_exit_code_labels_cover_all_valid_codes() -> None:
 
 
 # ---------------------------------------------------------------------------
-# WP7-C: compsval run show + compsval report build（Markdown 十二节）
+# WP7-C: gz_property_valuation run show + gz_property_valuation report build（Markdown 十二节）
 # ---------------------------------------------------------------------------
 
 _WP7C_COMMUNITY = "C-XXXX0013"

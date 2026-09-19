@@ -15,16 +15,16 @@ from decimal import Decimal
 
 import pyarrow as pa
 
-from compsval.contract.models import EventDatePrecision
-from compsval.ingest.clean import (
+from gz_property_valuation.contract.models import EventDatePrecision
+from gz_property_valuation.ingest.clean import (
     CleanedSale,
     CleaningSummary,
     clean_sales,
     sale_event_table,
 )
-from compsval.ingest.listing import listing_event_table
-from compsval.ingest.parsers.lianjia import LianjiaRecord
-from compsval.ingest.quality import (
+from gz_property_valuation.ingest.listing import listing_event_table
+from gz_property_valuation.ingest.parsers.lianjia import LianjiaRecord
+from gz_property_valuation.ingest.quality import (
     build_quality_report,
     key_field_coverage,
     per_community_deals,
@@ -280,7 +280,7 @@ def test_month_cutoff_clamps_day_to_month_length() -> None:
     """ext-sale-ingest-scope-v1-2：as_of 为 29-31 日时月份回滚收敛到月末。"""
     from datetime import date as _date
 
-    from compsval.ingest.quality import _month_cutoff
+    from gz_property_valuation.ingest.quality import _month_cutoff
 
     assert _month_cutoff(_date(2026, 8, 31), 6) == _date(2026, 2, 28)
     assert _month_cutoff(_date(2026, 8, 31), 12) == _date(2025, 8, 31)

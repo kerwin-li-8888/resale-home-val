@@ -12,11 +12,11 @@ from __future__ import annotations
 from datetime import date
 from decimal import Decimal
 
-from compsval.contract.models import (
+from gz_property_valuation.contract.models import (
     EventDatePrecision,
     MissingSemantics,
 )
-from compsval.ingest.parsers.lianjia import (
+from gz_property_valuation.ingest.parsers.lianjia import (
     parse_lianjia_txt,
 )
 

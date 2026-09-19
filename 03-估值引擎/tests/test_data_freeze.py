@@ -10,7 +10,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from compsval.ingest.data_freeze import (
+from gz_property_valuation.ingest.data_freeze import (
     FREEZE_VERSION_ID,
     check_disclosures,
     collect_freezable_assets,
@@ -71,14 +71,14 @@ def build_fixture_tree(root: Path) -> Path:
     _touch(ocr_batch / "floorplan_asset_manifest.json", '{"assets":[]}')
     for run in [
         "run_floorplan-ocr-data_selection_l",
-        "run_floorplan-ocr-data_selection_l-20260827T094212Z",
+        "run_floorplan-ocr-data_selection_l-20000101T000001Z",
         "run_floorplan-ocr-independent-reve",
-        "run_floorplan-ocr-concurrency-subs-20260830T065639Z",
-        "run_floorplan-ocr-concurrency-subs-20260830T070309Z",
-        "run_floorplan-ocr-concurrency-subs-20260830T070814Z",
-        "run_floorplan-ocr-ocrnext-d-subset-20260828T114752Z",
-        "run_floorplan-ocr-ocrnext-d-subset-20260828T115044Z",
-        "run_floorplan-ocr-ocrnext-d-subset-20260828T115946Z",
+        "run_floorplan-ocr-concurrency-subs-20000101T000002Z",
+        "run_floorplan-ocr-concurrency-subs-20000101T000003Z",
+        "run_floorplan-ocr-concurrency-subs-20000101T000004Z",
+        "run_floorplan-ocr-ocrnext-d-subset-20000101T000005Z",
+        "run_floorplan-ocr-ocrnext-d-subset-20000101T000006Z",
+        "run_floorplan-ocr-ocrnext-d-subset-20000101T000007Z",
         "run_floorplan-ocr-01-_____________",
     ]:
         _touch(ocr / run / "ocr_run.json", '{"tasks":[]}')
@@ -101,17 +101,16 @@ def build_fixture_tree(root: Path) -> Path:
     _touch(acc / "download_run.json")
     _touch(acc / "download_state.json")
     # 10 debug samples (repo-level, outside data/)
-    debug = root / "01-数据" / "外部数据" / "户型图样本-20260824"
+    debug = root / "examples" / "phase2_demo" / "floorplan_samples"
     for i in range(2):
         _touch(debug / f"huxingtu_{i:02d}.jpg")
     _touch(debug / "样本来源清单.md")
     # portrait + archive
     portrait = (
         root
-        / "01-数据"
-        / "外部数据"
-        / "画像报告"
-        / "20260830-外部链家OCR-EXTFP4-生产批次.json"
+        / "examples"
+        / "phase2_demo"
+        / "extfp4_portrait.json"
     )
     _touch(
         portrait,
@@ -221,7 +220,7 @@ class TestDisclosureCheck:
         assert verification.ok
         manifest_path, _ = write_manifest(manifest, data_dir / "versions")
         pointer = write_version_pointer(data_dir, f"versions/{manifest_path.name}")
-        from compsval.ingest.data_freeze import build_freeze_report
+        from gz_property_valuation.ingest.data_freeze import build_freeze_report
 
         report = build_freeze_report(data_dir.parent, manifest, verification, pointer)
         missing = check_disclosures(report)

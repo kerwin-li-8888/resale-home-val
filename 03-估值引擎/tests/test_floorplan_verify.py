@@ -13,32 +13,32 @@ from pathlib import Path
 import pyarrow as pa
 import pyarrow.parquet as pq
 
-from compsval.ingest.floorplan_asset import (
+from gz_property_valuation.ingest.floorplan_asset import (
     ASSET_MANIFEST_FILENAME,
     AssetStatus,
     FloorplanAsset,
     FloorplanAssetRun,
 )
-from compsval.ingest.floorplan_ocr import (
+from gz_property_valuation.ingest.floorplan_ocr import (
     OcrRunRecord,
     OcrState,
     OcrTaskRecord,
     raw_response_filename,
 )
-from compsval.ingest.floorplan_ocr_contract import OCR_MODEL_ID
-from compsval.ingest.floorplan_ocr_parse import (
+from gz_property_valuation.ingest.floorplan_ocr_contract import OCR_MODEL_ID
+from gz_property_valuation.ingest.floorplan_ocr_parse import (
     OcrParseRecord,
     OcrWordRecord,
     WordParseState,
     normalize_text,
     write_word_table,
 )
-from compsval.ingest.floorplan_transcribe import (
+from gz_property_valuation.ingest.floorplan_transcribe import (
     AnnotationState,
     RoomAnnotationRecord,
     write_annotation_table,
 )
-from compsval.ingest.floorplan_verify import (
+from gz_property_valuation.ingest.floorplan_verify import (
     CHECK_BATCH_UNIQUENESS,
     CHECK_BUILDING_AREA_EXCEL,
     CHECK_MODEL_MATCH,
@@ -704,7 +704,7 @@ def test_verify_run_with_repeat_and_consistency_backfill(tmp_path: Path) -> None
     assert repeat.status == "ok"
     assert report.quality.get("consistency_backfilled") is True
     # 回填落盘可读回
-    from compsval.ingest.floorplan_transcribe import (
+    from gz_property_valuation.ingest.floorplan_transcribe import (
         ANNOTATION_STAGED_FILENAME,
     )
 

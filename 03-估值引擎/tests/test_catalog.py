@@ -7,8 +7,8 @@ from pathlib import Path
 import pyarrow as pa
 import pyarrow.parquet as pq
 
-from compsval import catalog
-from compsval.ingest.manifests import (
+from gz_property_valuation import catalog
+from gz_property_valuation.ingest.manifests import (
     ColumnInfo,
     FileInfo,
     SnapshotManifest,

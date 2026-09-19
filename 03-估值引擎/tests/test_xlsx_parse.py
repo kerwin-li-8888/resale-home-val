@@ -2,7 +2,7 @@
 
 用 openpyxl 在 tmp_path 合成真实 XLSX fixture，验证 §6 字段映射、缺失语义
 （MISSING/PARSE_FAILURE）、户型图 URL 安全解析衔接、cell 表转置等价性与
-守恒统计。绝不触碰真实外部数据文件，也不访问网络。
+守恒统计。绝不触碰真实外源数据文件，也不访问网络。
 """
 
 from __future__ import annotations
@@ -14,9 +14,9 @@ from pathlib import Path
 
 from openpyxl import Workbook
 
-from compsval import cli
-from compsval.ingest.import_file import read_xlsx_table
-from compsval.ingest.xlsx_parse import (
+from gz_property_valuation import cli
+from gz_property_valuation.ingest.import_file import read_xlsx_table
+from gz_property_valuation.ingest.xlsx_parse import (
     FieldParseStatus,
     PropertyUseNorm,
     XlsxParsedRecord,
@@ -204,7 +204,7 @@ def test_transpose_cell_table_equivalence(tmp_path: Path) -> None:
     assert [rn for rn, _ in rows] == [2, 3, 4, 5, 6, 7]  # 数据行号（表头=1）
 
     direct = list(iter_parse_xlsx(path))
-    from compsval.ingest.xlsx_parse import _parse_rows
+    from gz_property_valuation.ingest.xlsx_parse import _parse_rows
 
     via_cells = list(_parse_rows(header, (values for _, values in rows)))
     assert len(via_cells) == len(direct)

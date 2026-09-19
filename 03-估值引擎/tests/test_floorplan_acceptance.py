@@ -12,7 +12,7 @@ from pathlib import Path
 
 import polars as pl
 
-from compsval.ingest.floorplan_acceptance import (
+from gz_property_valuation.ingest.floorplan_acceptance import (
     GOLDEN_LABEL_CSV_COLUMNS,
     AcceptanceSelectionManifest,
     GoldenLabelValidation,
@@ -25,7 +25,7 @@ from compsval.ingest.floorplan_acceptance import (
     write_ocr_draft_golden_labels,
     year_bucket,
 )
-from compsval.ingest.floorplan_profile import UrlListStatus
+from gz_property_valuation.ingest.floorplan_profile import UrlListStatus
 
 GOOD_URL = "http://ke-image.ljcdn.com/hdic-frame/1.jpg?from=ke.com"
 
@@ -280,7 +280,7 @@ def test_build_acceptance_sample_duplicate_sid_dedup(tmp_path: Path) -> None:
 
 def test_build_acceptance_sample_manifest_compat(tmp_path: Path) -> None:
     """AcceptanceSelectionManifest 是 SelectionManifest 子类，可被下载器消费。"""
-    from compsval.ingest.floorplan_selection import SelectionManifest
+    from gz_property_valuation.ingest.floorplan_selection import SelectionManifest
 
     path = _write_fixture_small(tmp_path)
     m = build_acceptance_sample(path, target=10, seed=20260825)
@@ -370,7 +370,7 @@ def test_validate_golden_labels_missing_and_invalid(tmp_path: Path) -> None:
 
 def test_validate_golden_labels_room_type_std(tmp_path: Path) -> None:
     """房间清单解析出标准房间类型与面积 Decimal。"""
-    from compsval.ingest.floorplan_acceptance import _parse_room_list
+    from gz_property_valuation.ingest.floorplan_acceptance import _parse_room_list
 
     rooms, errors = _parse_room_list("主卧=12.5;厨房;阳台=5")
     assert errors == []

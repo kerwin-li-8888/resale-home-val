@@ -1,9 +1,9 @@
-"""WP4-E: ``compsval data stage`` reproducible pipeline + marts layer.
+"""WP4-E: ``gz_property_valuation data stage`` reproducible pipeline + marts layer.
 
 Seeds one immutable raw lianjia TXT snapshot, then runs ``data_stage`` and
 checks the WP4-E acceptance criteria on the orchestration side:
 
-① ``data_stage``/``compsval data stage`` re-derives staged + marts tables with a
+① ``data_stage``/``gz_property_valuation data stage`` re-derives staged + marts tables with a
    correct DerivedManifest lineage, and is reproducible (same snapshot →
    byte-identical reports) — acceptance ① and ⑤;
 ② the quality report covers the §8.4 items and matches the frozen summary —
@@ -24,13 +24,13 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 import pytest
 
-from compsval import cli
-from compsval.catalog import SnapshotRef, list_snapshots
-from compsval.ingest.import_file import import_local_file
-from compsval.ingest.manifests import (
+from gz_property_valuation import cli
+from gz_property_valuation.catalog import SnapshotRef, list_snapshots
+from gz_property_valuation.ingest.import_file import import_local_file
+from gz_property_valuation.ingest.manifests import (
     read_derived_manifest,
 )
-from compsval.ingest.stage import (
+from gz_property_valuation.ingest.stage import (
     VALID_LISTING_FILENAME,
     VALID_LISTING_TABLE,
     VALID_SALE_FILENAME,
@@ -211,7 +211,7 @@ def test_quality_report_matches_summary_and_covers_sections(tmp_path: Path) -> N
 
 
 # ---------------------------------------------------------------------------
-# CLI：compsval data stage --snapshot 可用并返回 0
+# CLI：gz_property_valuation data stage --snapshot 可用并返回 0
 # ---------------------------------------------------------------------------
 
 

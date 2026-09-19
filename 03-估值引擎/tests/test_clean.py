@@ -15,8 +15,8 @@ from pathlib import Path
 
 import pyarrow as pa
 
-from compsval.contract.models import AnomalyFlag
-from compsval.ingest.clean import (
+from gz_property_valuation.contract.models import AnomalyFlag
+from gz_property_valuation.ingest.clean import (
     ROUNDING_TOLERANCE_YUAN,
     clean_sales,
     sale_event_table,
@@ -24,8 +24,8 @@ from compsval.ingest.clean import (
     within_rounding_tolerance,
     write_sale_event_stage,
 )
-from compsval.ingest.manifests import DerivedManifest, InputRef
-from compsval.ingest.parsers.lianjia import LianjiaRecord, parse_lianjia_txt
+from gz_property_valuation.ingest.manifests import DerivedManifest, InputRef
+from gz_property_valuation.ingest.parsers.lianjia import LianjiaRecord, parse_lianjia_txt
 
 _NOW = datetime(2026, 8, 21, 3, 14, 0)
 

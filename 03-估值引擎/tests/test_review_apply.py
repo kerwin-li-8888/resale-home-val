@@ -1,4 +1,4 @@
-"""WP7-D: ``compsval review apply`` 复核留痕（技术方案 §10.2/§11.1）。
+"""WP7-D: ``gz_property_valuation review apply`` 复核留痕（技术方案 §10.2/§11.1）。
 
 对照 WP7-D 验收标准：
 ① review apply 校验 valuation 存在性（不存在 → 退出码 3），只追加 review_event；
@@ -20,23 +20,23 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 import pytest
 
-from compsval import cli
-from compsval.contract.models import SubjectProperty
-from compsval.ingest.manifests import (
+from gz_property_valuation import cli
+from gz_property_valuation.contract.models import SubjectProperty
+from gz_property_valuation.ingest.manifests import (
     DerivedManifest,
     InputRef,
     write_derived_manifest,
 )
-from compsval.ingest.stage import MARTS_LAYER, VALID_SALE_FILENAME
-from compsval.reporting.envelope import (
+from gz_property_valuation.ingest.stage import MARTS_LAYER, VALID_SALE_FILENAME
+from gz_property_valuation.reporting.envelope import (
     InvalidInputError,
     MissingDependencyError,
 )
-from compsval.reporting.markdown import build_report_markdown
-from compsval.valuation.candidate import DEFAULT_RULE_VERSION
-from compsval.valuation.estimate import run_estimate
-from compsval.valuation.review import REVIEW_EVENT_FILENAME
-from compsval.valuation.review_apply import apply_review_for_run
+from gz_property_valuation.reporting.markdown import build_report_markdown
+from gz_property_valuation.valuation.candidate import DEFAULT_RULE_VERSION
+from gz_property_valuation.valuation.estimate import run_estimate
+from gz_property_valuation.valuation.review import REVIEW_EVENT_FILENAME
+from gz_property_valuation.valuation.review_apply import apply_review_for_run
 
 _COMMUNITY = "C-XXXX0013"
 _VAL_DATE = date(2026, 7, 21)

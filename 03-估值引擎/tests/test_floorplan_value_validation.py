@@ -18,7 +18,7 @@ from pathlib import Path
 import pyarrow as pa
 import pytest
 
-from compsval.valuation.floorplan_value_validation import (
+from gz_property_valuation.valuation.floorplan_value_validation import (
     EXPECTED_ANNOTATION_ROWS,
     EXPECTED_ASSET_COUNT,
     EXPECTED_STATE_COUNTS,
@@ -264,7 +264,7 @@ def test_real_rebuild_deterministic(tmp_path: Path) -> None:
 
 
 def _expected_rebuild_columns() -> list[str]:
-    from compsval.valuation import floorplan_value_validation as fvv
+    from gz_property_valuation.valuation import floorplan_value_validation as fvv
 
     return list(fvv.REBUILD_ANNOTATION_COLUMNS)
 

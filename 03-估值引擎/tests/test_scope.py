@@ -19,9 +19,9 @@ from pathlib import Path
 import pyarrow as pa
 import pyarrow.parquet as pq
 
-from compsval.contract.models import BoundaryStatus
-from compsval.entities.community import COMMUNITY_FILENAME, ENTITIES_LAYER
-from compsval.valuation.scope import (
+from gz_property_valuation.contract.models import BoundaryStatus
+from gz_property_valuation.entities.community import COMMUNITY_FILENAME, ENTITIES_LAYER
+from gz_property_valuation.valuation.scope import (
     AUDIT_INPUT,
     CATALOG_INPUT,
     DEFAULT_RULE_VERSION,
@@ -317,7 +317,7 @@ def test_real_community_table_classification() -> None:
             "C-OUT": BoundaryStatus.OUT_OF_SCOPE,
         }
     )
-    from compsval.valuation.scope import scope_policy_table
+    from gz_property_valuation.valuation.scope import scope_policy_table
 
     out = scope_policy_table(table, default_policy())
     decisions = {

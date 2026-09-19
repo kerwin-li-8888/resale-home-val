@@ -1,0 +1,76 @@
+{
+ "seed": 20260918,
+ "district": "云溪区",
+ "anchor": "2026-07-01",
+ "contract_id": "DEMO-RELEASE-001",
+ "master_rows": 690,
+ "communities": 8,
+ "b0_med_ape": 0.077679,
+ "m1_med_ape": 0.041713,
+ "b0_fallback_disclosure": {
+  "community": 1.0,
+  "block": 0.0,
+  "district": 0.0
+ },
+ "composition_id": "41e985f578c287018711f3d869342558b33482dc4d9d942ea2bf2931db386ed8",
+ "five_component_digests": {
+  "model": "e1a42a16f0338d46",
+  "feature": "0156f67fdbbe0d1c",
+  "market_asset": "328fd724456d2dbf",
+  "calibration": "122287ae9132a3c2",
+  "coordination_policy": "6eb732d3920cae69"
+ },
+ "hash_chain": {
+  "records": 2,
+  "first_sha256": "94657067a889d093",
+  "prev_link_ok": true,
+  "verify": true
+ },
+ "candidates": [
+  {
+   "request_id": "DEMO-REQ-01",
+   "branch": "normal",
+   "b0_level": "community",
+   "b0_pred": 19392.14,
+   "m1_pred_unit_price": 18645.38,
+   "m1_b0_divergence": 0.038509,
+   "m1_b0_divergence_flagged": false,
+   "decision": "candidate_reference",
+   "formal_price": null,
+   "note": "小区窗口内案例充足 → B0 命中 community 层"
+  },
+  {
+   "request_id": "DEMO-REQ-02",
+   "branch": "degraded_community_cold_start",
+   "b0_level": "block",
+   "b0_pred": 20533.89,
+   "m1_pred_unit_price": 11362.87,
+   "m1_b0_divergence": 0.446629,
+   "m1_b0_divergence_flagged": true,
+   "decision": "candidate_reference",
+   "formal_price": null,
+   "note": "小区为窗口外新小区 → B0 回退 block 层；M1-B0 分歧超阈值仅标注，不仲裁不隐藏"
+  },
+  {
+   "request_id": "DEMO-REQ-03",
+   "branch": "degraded_block_cold_start",
+   "b0_level": "district",
+   "b0_pred": 19503.42,
+   "m1_pred_unit_price": 3696.01,
+   "m1_b0_divergence": 0.810494,
+   "m1_b0_divergence_flagged": true,
+   "decision": "candidate_reference",
+   "formal_price": null,
+   "note": "小区与板块均未知 → B0 回退 district 层（区级中位）；M1-B0 分歧超阈值仅标注，不仲裁不隐藏"
+  }
+ ],
+ "release_gate": {
+  "unreleased": true,
+  "record_missing": true,
+  "state": "version_disabled",
+  "formal_price_present": false,
+  "gate09_reason": "FG09_RELEASE_CHECK_MISSING",
+  "stop_switch_default_stopped": true,
+  "conclusion": "默认态＝未发布，正式出价不可用（fail-closed）；本演示不执行正式启用，与「暂不可正式启用」结论一致"
+ }
+}

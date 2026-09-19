@@ -20,15 +20,15 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 import pytest
 
-from compsval.contract.models import (
+from gz_property_valuation.contract.models import (
     ReviewAction,
     ReviewEvent,
     ReviewJudgment,
 )
-from compsval.ingest.manifests import InputRef
-from compsval.valuation.aggregation import VALUATION_RESULT_FILENAME
-from compsval.valuation.candidate import VALUATION_LAYER
-from compsval.valuation.review import (
+from gz_property_valuation.ingest.manifests import InputRef
+from gz_property_valuation.valuation.aggregation import VALUATION_RESULT_FILENAME
+from gz_property_valuation.valuation.candidate import VALUATION_LAYER
+from gz_property_valuation.valuation.review import (
     REVIEW_EVENT_FILENAME,
     ReviewError,
     ReviewEventInput,

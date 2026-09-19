@@ -1,15 +1,19 @@
 [project]
-name = "compsval"
+name = "gz_property_valuation"
 version = "0.1.0"
-description = "ExampleCity target-district residential comparable-sales valuation engine (skeleton, derived from Philly Fair Measure)"
+description = "Explainable comparable-sales resale valuation engine: comps-style core plus a governed quantified model layer (B0 baseline / M1 explainable / GBM challengers with freeze, degradation and fail-closed release gates)"
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
 requires-python = ">=3.12"
 dependencies = [
+    "catboost>=1.2",
     "duckdb>=1.0",
     "httpx>=0.28",
+    "lightgbm>=4.0",
+    "numpy>=1.26",
     "openpyxl>=3.1.2",
+    "pandas>=2.2",
     "pillow>=12.3",
     "polars>=1.42.1",
     "pyarrow>=17",
@@ -19,7 +23,7 @@ dependencies = [
 ]
 
 [project.scripts]
-compsval = "compsval.cli:main"
+gzv = "gz_property_valuation.cli:main"
 
 [dependency-groups]
 dev = [

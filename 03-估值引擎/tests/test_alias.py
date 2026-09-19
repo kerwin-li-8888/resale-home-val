@@ -6,7 +6,7 @@
 ③ conflict_status 三分（一致/冲突/待定）且填写正确；
 ④ 低置信匹配不自动合并、进待复核（PENDING/CONFLICT 未合并为同一小区）；
 ⑤ 输出待人工确认清单（pending_confirmation，#1-10 全登记）；
-⑥ ruff/mypy/pytest + ``compsval entities build``/``compsval catalog`` 通过。
+⑥ ruff/mypy/pytest + ``gz_property_valuation entities build``/``gz_property_valuation catalog`` 通过。
 """
 
 from __future__ import annotations
@@ -17,9 +17,9 @@ import pyarrow.parquet as pq
 import pytest
 from pydantic import ValidationError
 
-from compsval import cli
-from compsval.contract.models import AliasConflictStatus, CommunityAlias
-from compsval.entities.alias import (
+from gz_property_valuation import cli
+from gz_property_valuation.contract.models import AliasConflictStatus, CommunityAlias
+from gz_property_valuation.entities.alias import (
     _ALIAS_MAPPINGS,
     ALIAS_FILENAME,
     ALIAS_TABLE,
@@ -33,8 +33,8 @@ from compsval.entities.alias import (
     pending_confirmation,
     write_alias_entity,
 )
-from compsval.entities.community import build_community_entity, community_id_of
-from compsval.ingest.manifests import read_derived_manifest
+from gz_property_valuation.entities.community import build_community_entity, community_id_of
+from gz_property_valuation.ingest.manifests import read_derived_manifest
 
 _STATUS_VALUES = {s.value for s in AliasConflictStatus}
 _CONFLICT_NOS = set(range(1, 11))
@@ -104,7 +104,7 @@ def test_alias_id_is_unique_and_stable() -> None:
 
 
 def test_source_names_use_registered_sources() -> None:
-    from compsval.contract.registry import registered_sources
+    from gz_property_valuation.contract.registry import registered_sources
 
     registered = {s.source_id for s in registered_sources()}
     aliases = _aliases()
@@ -117,7 +117,7 @@ def test_source_names_use_registered_sources() -> None:
 
 
 def test_every_anchor_exists_in_candidates() -> None:
-    from compsval.entities.candidates import candidates_all
+    from gz_property_valuation.entities.candidates import candidates_all
 
     known = {c.source_key for c in candidates_all()}
     assert all(m.anchor_key in known for m in _ALIAS_MAPPINGS)
@@ -251,7 +251,7 @@ def test_alias_model_requires_source_ref() -> None:
 
 
 # ---------------------------------------------------------------------------
-# 验收⑥ 效果：compsval entities build 一并生成 community_alias + 输出清单
+# 验收⑥ 效果：gz_property_valuation entities build 一并生成 community_alias + 输出清单
 # ---------------------------------------------------------------------------
 
 
@@ -268,7 +268,7 @@ def test_cli_entities_build_builds_alias_and_prints_checklist(
     for n in range(1, 11):
         assert f"#{n} " in out
 
-    # community_alias 对 compsval catalog 可见（entities 层 ent_ 视图前缀）
+    # community_alias 对 gz_property_valuation catalog 可见（entities 层 ent_ 视图前缀）
     assert cli.main(["catalog", "--data-dir", str(tmp_path)]) == 0
     out = capsys.readouterr().out
     assert "[entities] ent_community_alias" in out

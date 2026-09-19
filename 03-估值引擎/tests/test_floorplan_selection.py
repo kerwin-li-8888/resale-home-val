@@ -12,8 +12,8 @@ from pathlib import Path
 
 import polars as pl
 
-from compsval.ingest.floorplan_profile import UrlListStatus
-from compsval.ingest.floorplan_selection import (
+from gz_property_valuation.ingest.floorplan_profile import UrlListStatus
+from gz_property_valuation.ingest.floorplan_selection import (
     DOMAIN_WHITELIST,
     SELECTION_RULE_VERSION,
     SelectionManifest,

@@ -12,14 +12,14 @@ from pathlib import Path
 
 import pyarrow.parquet as pq
 
-from compsval.ingest.floorplan_ocr_parse import (
+from gz_property_valuation.ingest.floorplan_ocr_parse import (
     OcrParseRecord,
     OcrWordRecord,
     WordParseState,
     normalize_text,
     write_word_table,
 )
-from compsval.ingest.floorplan_transcribe import (
+from gz_property_valuation.ingest.floorplan_transcribe import (
     ANNOTATION_STAGED_FILENAME,
     TRANSCRIBE_PARSER_VERSION,
     AnnotationState,
@@ -383,7 +383,7 @@ def test_word_participation_preserves_parse_version_and_response_state(
 
 
 def test_write_annotation_table_atomic_no_incomplete_leftover(tmp_path: Path) -> None:
-    from compsval.ingest.floorplan_transcribe import write_annotation_table
+    from gz_property_valuation.ingest.floorplan_transcribe import write_annotation_table
 
     data_dir = tmp_path / "data"
     records = transcribe_words([_word("主卧", order=0), _word("12.5㎡", order=1)])

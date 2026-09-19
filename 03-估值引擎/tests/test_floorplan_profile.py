@@ -1,7 +1,7 @@
 """EXTFP0-E 占位图画像与选择规则的离线测试。
 
 用小而确定的 XLSX fixture（openpyxl 在 tmp_path 生成）验证 URL 列表安全解析、
-dituFindHouse 占位识别、选择规则冻结与报告生成；绝不触碰真实外部数据，不访问网络。
+dituFindHouse 占位识别、选择规则冻结与报告生成；绝不触碰真实外源数据，不访问网络。
 """
 
 from __future__ import annotations
@@ -12,7 +12,7 @@ from pathlib import Path
 from openpyxl import Workbook
 from pytest import raises
 
-from compsval.ingest.floorplan_profile import (
+from gz_property_valuation.ingest.floorplan_profile import (
     SELECTION_RULE_TEXT,
     SELECTION_RULE_VERSION,
     UrlClass,

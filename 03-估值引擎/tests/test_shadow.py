@@ -22,13 +22,13 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 import pytest
 
-from compsval import cli
-from compsval.contract.models import SubjectProperty
-from compsval.entities import building as entities_building
-from compsval.entities import community as entities_community
-from compsval.entities import market_series as entities_market_series
-from compsval.ingest.stage import MARTS_LAYER, VALID_SALE_FILENAME
-from compsval.valuation.shadow import (
+from gz_property_valuation import cli
+from gz_property_valuation.contract.models import SubjectProperty
+from gz_property_valuation.entities import building as entities_building
+from gz_property_valuation.entities import community as entities_community
+from gz_property_valuation.entities import market_series as entities_market_series
+from gz_property_valuation.ingest.stage import MARTS_LAYER, VALID_SALE_FILENAME
+from gz_property_valuation.valuation.shadow import (
     MIN_TRIGGER_SAMPLES,
     TRIGGER_DATA_STALE,
     TRIGGER_ERROR_EXPANSION,
@@ -316,7 +316,7 @@ def test_backfill_reproducible(tmp_path: Path) -> None:
 def test_backfill_missing_track_raises(tmp_path: Path) -> None:
     lake = tmp_path / "lake"
     write_synthetic_lake(lake)
-    from compsval.reporting.envelope import MissingDependencyError
+    from gz_property_valuation.reporting.envelope import MissingDependencyError
 
     with pytest.raises(MissingDependencyError):
         backfill_followups(data_dir=lake)

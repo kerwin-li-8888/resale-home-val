@@ -5,7 +5,7 @@
 ② 实体权威表每行可追溯到来源（名录节号+行号 source_ref）；
 ③ boundary_status 按 DATA-001-C 边界三分（机器确认/边界待定/正式范围外）；
 ④ 坐标若记录必带 coordinate_system（Community 模型校验器，§7.3 无声明不转换）；
-⑤ ``compsval catalog`` 列出实体表（entities 层目录注册）；
+⑤ ``gz_property_valuation catalog`` 列出实体表（entities 层目录注册）；
 ⑥ ruff/mypy/pytest 通过（质量门禁，见 self-check）。
 
 骨架期仅转录候选名录中**具来源 ID** 的行（237 个，含 2026-08-22 补数新增
@@ -21,14 +21,14 @@ import pyarrow.parquet as pq
 import pytest
 from pydantic import ValidationError
 
-from compsval import cli
-from compsval.contract.models import BoundaryStatus, Community, CoordinateSystem
-from compsval.entities.candidates import (
+from gz_property_valuation import cli
+from gz_property_valuation.contract.models import BoundaryStatus, Community, CoordinateSystem
+from gz_property_valuation.entities.candidates import (
     ID_PENDING_EXCLUDED,
     CandidateCommunity,
     candidates_all,
 )
-from compsval.entities.community import (
+from gz_property_valuation.entities.community import (
     CATALOG_INPUT,
     COMMUNITY_FILENAME,
     COMMUNITY_TABLE,
@@ -41,7 +41,7 @@ from compsval.entities.community import (
     to_community,
     write_community_entity,
 )
-from compsval.ingest.manifests import read_derived_manifest
+from gz_property_valuation.ingest.manifests import read_derived_manifest
 
 _BOUNDARY_VALUES = {
     BoundaryStatus.MACHINE_CONFIRMED.value,
@@ -276,7 +276,7 @@ def test_build_community_entity_roundtrip(tmp_path: Path) -> None:
 
 
 # ---------------------------------------------------------------------------
-# 验收⑤：compsval entities build + compsval catalog 列出实体表
+# 验收⑤：gz_property_valuation entities build + gz_property_valuation catalog 列出实体表
 # ---------------------------------------------------------------------------
 
 

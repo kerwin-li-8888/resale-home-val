@@ -10,12 +10,12 @@ import pyarrow as pa
 import pyarrow.csv as pacsv
 import pytest
 
-from compsval.contract.models import (
+from gz_property_valuation.contract.models import (
     EventDatePrecision,
     MissingSemantics,
 )
-from compsval.ingest.parsers.lianjia import parse_lianjia_txt
-from compsval.ingest.parsers.lianjia_html import (
+from gz_property_valuation.ingest.parsers.lianjia import parse_lianjia_txt
+from gz_property_valuation.ingest.parsers.lianjia_html import (
     CSV_COLUMNS,
     crosscheck_html_vs_log,
     extract_li_blocks,
@@ -28,8 +28,8 @@ from compsval.ingest.parsers.lianjia_html import (
 REPO_ROOT = Path(__file__).resolve().parents[1].parent
 EVIDENCE_DIR = (
     REPO_ROOT
-    / "01-数据"
-    / "raw"
+    / "examples"
+    / "demo_raw"
     / "source=lianjia"
     / "dataset=chengjiao"
     / "fetched_at=20260823"

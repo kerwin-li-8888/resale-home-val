@@ -1,7 +1,7 @@
 """EXTFP1-E 质量报告与回滚点的离线测试。
 
 用合成 XLSX fixture 走 stage → quality 链路，验证质量报告数字、守恒校验、
-MD+JSON 一致性、回滚点字段与 CLI。绝不触碰真实外部数据文件，也不访问网络。
+MD+JSON 一致性、回滚点字段与 CLI。绝不触碰真实外源数据文件，也不访问网络。
 """
 
 from __future__ import annotations
@@ -14,13 +14,13 @@ import pyarrow as pa
 import pytest
 from openpyxl import Workbook
 
-from compsval import cli
-from compsval.ingest.xlsx_quality import (
+from gz_property_valuation import cli
+from gz_property_valuation.ingest.xlsx_quality import (
     build_xlsx_quality_report,
     load_staged_tables,
     write_xlsx_quality,
 )
-from compsval.ingest.xlsx_stage import stage_xlsx
+from gz_property_valuation.ingest.xlsx_stage import stage_xlsx
 
 HEADERS = [
     "省份", "城市", "区县", "板块", "房屋ID", "房源标题", "房源描述", "成交日期",
@@ -212,4 +212,4 @@ def test_cli_xlsx_quality_without_staged_fails(tmp_path: Path, capsys) -> None:
         )
         == 1
     )
-    assert "先运行 compsval xlsx stage" in capsys.readouterr().out
+    assert "先运行 gz_property_valuation xlsx stage" in capsys.readouterr().out

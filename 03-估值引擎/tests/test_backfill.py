@@ -20,26 +20,28 @@ from pathlib import Path
 import pyarrow as pa
 import pyarrow.parquet as pq
 
-from compsval.catalog import list_snapshots
-from compsval.contract.models import AliasConflictStatus
-from compsval.entities.alias import ALIAS_FILENAME, alias_schema
-from compsval.entities.backfill import (
+from gz_property_valuation.catalog import list_snapshots
+from gz_property_valuation.contract.models import AliasConflictStatus
+from gz_property_valuation.entities.alias import ALIAS_FILENAME, alias_schema
+from gz_property_valuation.entities.backfill import (
     BackfillOutcome,
     CommunityIdLookup,
+    cmp_norm,
     collect_unmatched_conflicts,
     load_community_lookup,
+    outside_region_bracket,
     resolve_community_id,
 )
-from compsval.entities.community import (
+from gz_property_valuation.entities.community import (
     COMMUNITY_FILENAME,
     ENTITIES_LAYER,
     community_schema,
 )
-from compsval.ingest.clean import clean_sales, sale_event_table
-from compsval.ingest.import_file import import_local_file
-from compsval.ingest.listing import listing_event_table
-from compsval.ingest.parsers.lianjia import LianjiaRecord
-from compsval.ingest.stage import data_stage
+from gz_property_valuation.ingest.clean import clean_sales, sale_event_table
+from gz_property_valuation.ingest.import_file import import_local_file
+from gz_property_valuation.ingest.listing import listing_event_table
+from gz_property_valuation.ingest.parsers.lianjia import LianjiaRecord
+from gz_property_valuation.ingest.stage import data_stage
 
 _FETCHED = datetime(2026, 8, 21, 3, 14, 0, tzinfo=UTC)
 _SOURCE_ID = "SRC-X"
@@ -120,10 +122,10 @@ def test_load_lookup_builds_from_entity_tables(tmp_path: Path) -> None:
     _write_entities(tmp_path)
     lookup = load_community_lookup(data_dir=tmp_path)
 
-    # 标准名 → C-id
-    assert lookup.canonical["绿洲花园"] == ("C-1", "社区权威表 standard_name 命中")
-    # CONSISTENT 别名 → C-id（溯源理由 = alias source_ref）
-    assert lookup.alias_consistent["绿洲家园"] == ("C-1", "候选小区名录-V0.1.md §3 #9")
+    # 标准名 → {C-id: 溯源}（norm-v2 键 → {目标: 溯源} 字典，保多义）
+    assert lookup.canonical["绿洲花园"] == {"C-1": "社区权威表 standard_name 命中"}
+    # CONSISTENT 别名 → {C-id: source_ref}
+    assert lookup.alias_consistent["绿洲家园"] == {"C-1": "候选小区名录-V0.1.md §3 #9"}
     # PENDING/CONFLICT 别名 → 进 blocked，不带出可映射 id
     assert lookup.blocked["越秀紫苑"] == AliasConflictStatus.PENDING.value
     assert lookup.blocked["相似命名X"] == AliasConflictStatus.CONFLICT.value
@@ -142,19 +144,20 @@ def test_load_lookup_is_empty_when_entities_missing(tmp_path: Path) -> None:
 
 def test_resolve_canonical_name_hits() -> None:
     lookup = _sample_lookup()
-    community_id, outcome, reason = resolve_community_id("绿洲花园", lookup)
+    community_id, sub_area, outcome, reason = resolve_community_id("绿洲花园", lookup)
     assert community_id == "C-1"
+    assert sub_area is None
     assert outcome is BackfillOutcome.HIT_CANONICAL
-    assert "standard_name" in reason
+    assert reason == "标准名命中"
 
 
 def _sample_lookup() -> CommunityIdLookup:
     lookup = CommunityIdLookup(
         canonical={
-            "绿洲花园": ("C-1", "社区权威表 standard_name 命中"),
-            "越秀花园": ("C-2", "社区权威表 standard_name 命中"),
+            "绿洲花园": {"C-1": "社区权威表 standard_name 命中"},
+            "越秀花园": {"C-2": "社区权威表 standard_name 命中"},
         },
-        alias_consistent={"绿洲家园": ("C-1", "候选小区名录 §3 #9")},
+        alias_consistent={"绿洲家园": {"C-1": "候选小区名录 §3 #9"}},
         blocked={
             "越秀紫苑": AliasConflictStatus.PENDING.value,
             "相似命名X": AliasConflictStatus.CONFLICT.value,
@@ -165,8 +168,9 @@ def _sample_lookup() -> CommunityIdLookup:
 
 def test_resolve_consistent_alias_hits_with_traceable_reason() -> None:
     lookup = _sample_lookup()
-    community_id, outcome, reason = resolve_community_id("绿洲家园", lookup)
+    community_id, sub_area, outcome, reason = resolve_community_id("绿洲家园", lookup)
     assert community_id == "C-1"
+    assert sub_area is None
     assert outcome is BackfillOutcome.HIT_ALIAS
     # 验收②：经 alias 映射可溯源（理由 = 该 alias 的 source_ref/出处）
     assert "§3 #9" in reason
@@ -179,7 +183,7 @@ def test_resolve_consistent_alias_hits_with_traceable_reason() -> None:
 
 def test_resolve_blocked_pending_is_not_merged() -> None:
     lookup = _sample_lookup()
-    community_id, outcome, reason = resolve_community_id("越秀紫苑", lookup)
+    community_id, _sub_area, outcome, reason = resolve_community_id("越秀紫苑", lookup)
     assert community_id is None
     assert outcome is BackfillOutcome.BLOCKED
     assert "不静默合并" in reason
@@ -187,14 +191,14 @@ def test_resolve_blocked_pending_is_not_merged() -> None:
 
 def test_resolve_blocked_conflict_is_not_merged() -> None:
     lookup = _sample_lookup()
-    community_id, outcome, _reason = resolve_community_id("相似命名X", lookup)
+    community_id, _sub_area, outcome, _reason = resolve_community_id("相似命名X", lookup)
     assert community_id is None
     assert outcome is BackfillOutcome.BLOCKED
 
 
 def test_resolve_unmatched_returns_none() -> None:
     lookup = _sample_lookup()
-    community_id, outcome, reason = resolve_community_id("不存在的小区", lookup)
+    community_id, _sub_area, outcome, reason = resolve_community_id("不存在的小区", lookup)
     assert community_id is None
     assert outcome is BackfillOutcome.UNMATCHED
     assert "均未命中" in reason
@@ -216,7 +220,7 @@ def test_collect_unmatched_conflicts_empty_lookup_returns_empty(tmp_path: Path) 
 def test_resolve_none_or_blank_never_matches() -> None:
     lookup = _sample_lookup()
     for bad in (None, "", "  "):
-        community_id, outcome, _reason = resolve_community_id(bad, lookup)
+        community_id, _sub_area, outcome, _reason = resolve_community_id(bad, lookup)
         assert community_id is None
         assert outcome is BackfillOutcome.UNMATCHED
 
@@ -338,3 +342,34 @@ def _seed_snapshot(lake: Path) -> None:
         query="https://lianjia.com.example/chengjiao/targetdistrict/",
         data_dir=lake,
     )
+
+
+# ---------------------------------------------------------------------------
+# norm-v2 区县括注语义：目标区（云溪）括注等同裸名；非目标区行政区括注整行排除
+# ---------------------------------------------------------------------------
+
+
+def test_cmp_norm_strips_target_district_bracket() -> None:
+    assert cmp_norm("绿洲花园(云溪区)") == cmp_norm("绿洲花园")
+    assert cmp_norm("绿洲花园(云溪)") == cmp_norm("绿洲花园")
+    assert cmp_norm("绿洲花园(二期)") == cmp_norm("绿洲花园")
+
+
+def test_outside_region_bracket_flags_only_non_target_districts() -> None:
+    assert outside_region_bracket("绿洲花园(临湖区)") == "临湖区"
+    assert outside_region_bracket("绿洲花园(临湖)") == "临湖"
+    assert outside_region_bracket("绿洲花园(云溪区)") is None
+    assert outside_region_bracket("绿洲花园(云溪)") is None
+    assert outside_region_bracket("绿洲花园(板桥街道)") is None  # 非行政区名不拦
+    assert outside_region_bracket("绿洲花园") is None
+
+
+def test_resolve_excludes_out_of_region_rows() -> None:
+    lookup = _sample_lookup()
+    community_id, sub_area, outcome, reason = resolve_community_id(
+        "绿洲花园(临湖区)", lookup
+    )
+    assert community_id is None
+    assert sub_area is None
+    assert outcome is BackfillOutcome.EXCLUDED_OUT_OF_REGION
+    assert "整行排除" in reason

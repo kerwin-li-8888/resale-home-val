@@ -1,4 +1,4 @@
-"""WP7-B: ``compsval estimate`` 端到端估值命令（REP-001 执行）。
+"""WP7-B: ``gz_property_valuation estimate`` 端到端估值命令（REP-001 执行）。
 
 对照 WP7-B 验收标准：
 ① 一次命令从 subject JSON 生成冻结估值 JSON（§10.3 包络全字段），非交互可调用；
@@ -21,30 +21,30 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 import pytest
 
-from compsval import cli
-from compsval.contract.models import (
+from gz_property_valuation import cli
+from gz_property_valuation.contract.models import (
     ConfidenceLevel,
     OutputStatus,
     SubjectProperty,
 )
-from compsval.ingest.manifests import (
+from gz_property_valuation.ingest.manifests import (
     DerivedManifest,
     InputRef,
     write_derived_manifest,
 )
-from compsval.ingest.stage import MARTS_LAYER, VALID_SALE_FILENAME
-from compsval.reporting.envelope import (
+from gz_property_valuation.ingest.stage import MARTS_LAYER, VALID_SALE_FILENAME
+from gz_property_valuation.reporting.envelope import (
     CommandStatus,
     InvalidInputError,
     MissingDependencyError,
     VersionMismatchError,
 )
-from compsval.valuation.aggregation import (
+from gz_property_valuation.valuation.aggregation import (
     ValuationResultOutcome,
     ValuationResultTabled,
 )
-from compsval.valuation.candidate import DEFAULT_RULE_VERSION
-from compsval.valuation.estimate import run_estimate
+from gz_property_valuation.valuation.candidate import DEFAULT_RULE_VERSION
+from gz_property_valuation.valuation.estimate import run_estimate
 
 _COMMUNITY = "C-XXXX0013"
 _VAL_DATE = date(2026, 7, 21)
@@ -234,7 +234,7 @@ def test_estimate_version_mismatch_exit_4(tmp_path: Path, monkeypatch: pytest.Mo
         )
 
     monkeypatch.setattr(
-        "compsval.valuation.estimate.apply_aggregation", _fake_aggregation
+        "gz_property_valuation.valuation.estimate.apply_aggregation", _fake_aggregation
     )
     with pytest.raises(VersionMismatchError):
         run_estimate(subject=_subject(), data_dir=data_dir, out_root=tmp_path / "reports")

@@ -5,7 +5,7 @@ from pathlib import Path
 
 import polars as pl
 
-from compsval.ingest.diff import (
+from gz_property_valuation.ingest.diff import (
     ColumnChange,
     DiffSpec,
     SnapshotDiff,

@@ -14,7 +14,7 @@ from pathlib import Path
 import httpx
 import pytest
 
-from compsval.ingest.floorplan_download import (
+from gz_property_valuation.ingest.floorplan_download import (
     DOWNLOADER_VERSION,
     DownloadState,
     DownloadTask,
@@ -22,7 +22,7 @@ from compsval.ingest.floorplan_download import (
     run_download,
     transition,
 )
-from compsval.ingest.floorplan_selection import (
+from gz_property_valuation.ingest.floorplan_selection import (
     SelectionEntry,
     SelectionManifest,
 )

@@ -17,23 +17,24 @@ from pathlib import Path
 import pyarrow as pa
 import pytest
 
-from compsval.entities.backfill import (
+from gz_property_valuation.entities.backfill import (
     CommunityIdLookup,
     load_community_lookup,
 )
-from compsval.ingest.ext_source import (
+from gz_property_valuation.ingest.ext_source import (
     EXT_SOURCE_ID,
+    district_gate_blocked,
     ext_rows_to_records,
     normalize_layout,
     read_current_ext_run,
     run_fetched_at,
     split_resolvable,
 )
-from compsval.ingest.marts_build import (
+from gz_property_valuation.ingest.marts_build import (
     LIANJIA_COMMUNITY_REGISTRY,
     build_combined_marts,
 )
-from compsval.ingest.stage import valid_sale_table
+from gz_property_valuation.ingest.stage import valid_sale_table
 
 # ---------------------------------------------------------------------------
 # P0 注册表（任务 1.1）
@@ -59,11 +60,11 @@ def test_registry_similar_names_not_registered() -> None:
         "示例小区145",
         "示例小区217",
         "示例小区050",
-        "江南花苑",
-        "江南新苑",
-        "红棉苑南区",
-        "红棉苑北区",
-        "广信红棉阁",
+        "示例小区146",
+        "示例小区149",
+        "示例小区147",
+        "示例小区148",
+        "示例小区151",
         "示例小区009",
     ):
         assert name not in LIANJIA_COMMUNITY_REGISTRY
@@ -71,15 +72,15 @@ def test_registry_similar_names_not_registered() -> None:
 
 def test_registry_lookup_resolves_p0_names() -> None:
     """注册表经 lianjia_extended_lookup 对空查找表补条目（可解析）。"""
-    from compsval.ingest.marts_build import lianjia_extended_lookup
+    from gz_property_valuation.ingest.marts_build import lianjia_extended_lookup
 
     empty = CommunityIdLookup(canonical={}, alias_consistent={}, blocked={})
     lookup = lianjia_extended_lookup(empty)
     assert split_resolvable.__doc__ is not None  # 语义锚
-    kept, unmatched = split_resolvable(
+    kept, unmatched, excluded = split_resolvable(
         ext_rows_to_records(_ext_table([("示例小区144", "2026-03-15")])), lookup
     )
-    assert len(kept) == 1 and not unmatched
+    assert len(kept) == 1 and not unmatched and not excluded
 
 
 # ---------------------------------------------------------------------------
@@ -227,7 +228,7 @@ def test_ext_rows_unit_price_requires_parsed_status() -> None:
 def test_split_resolvable_conservation_and_blocked() -> None:
     """守恒：输入 = 可解析 + 未解析；blocked 别名（泰沙路）不入可解析。"""
     lookup = CommunityIdLookup(
-        canonical={"示例小区144": ("C-XXXX0116", "标准名命中")},
+        canonical={"示例小区144": {"C-XXXX0116": "标准名命中"}},
         alias_consistent={},
         blocked={"泰沙路": "待定"},
     )
@@ -236,11 +237,12 @@ def test_split_resolvable_conservation_and_blocked() -> None:
             [("示例小区144", "2026-03-15"), ("泰沙路", "2026-03-16"), ("社区X", "2026-03-17")]
         )
     )
-    kept, unmatched = split_resolvable(records, lookup)
+    kept, unmatched, excluded = split_resolvable(records, lookup)
     assert len(kept) == 1
     assert kept[0].community == "示例小区144"
     assert unmatched == Counter({"泰沙路": 1, "社区X": 1})
-    assert len(records) == len(kept) + sum(unmatched.values())  # 守恒
+    assert not excluded  # 无外区括注证据 → 排除册为空
+    assert len(records) == len(kept) + sum(unmatched.values()) + sum(excluded.values())  # 守恒
 
 
 def test_read_current_ext_run_pointer_missing_returns_none(tmp_path: Path) -> None:
@@ -284,7 +286,7 @@ def test_read_current_ext_run_reads_pointer_run(tmp_path: Path) -> None:
 
 
 def test_run_fetched_at_parses_run_id() -> None:
-    assert run_fetched_at("20260831T041648Z") == datetime(2026, 8, 31, 4, 16, 48, tzinfo=UTC)
+    assert run_fetched_at("20000101T000000Z") == datetime(2000, 1, 1, 0, 0, 0, tzinfo=UTC)
 
 
 # ---------------------------------------------------------------------------
@@ -341,7 +343,7 @@ def _seed_entities(lake: Path) -> None:
     pq.write_table(alias, entities / "community_alias.parquet")
 
 
-def _seed_ext_staged(lake: Path, table: pa.Table, run_id: str = "20260831T041648Z") -> None:
+def _seed_ext_staged(lake: Path, table: pa.Table, run_id: str = "20000101T000000Z") -> None:
     import pyarrow.parquet as pq
 
     run_dir = lake / "staged" / "lianjia_ext" / "runs" / f"run_{run_id}"
@@ -365,7 +367,7 @@ def _seed_ext_staged(lake: Path, table: pa.Table, run_id: str = "20260831T041648
 
 
 def _seed_lianjia_raw(lake: Path) -> None:
-    from compsval.ingest.import_file import import_local_file
+    from gz_property_valuation.ingest.import_file import import_local_file
 
     raw = lake / "evidence" / "lianjia.txt"
     raw.parent.mkdir(parents=True, exist_ok=True)
@@ -403,7 +405,7 @@ def test_build_combined_marts_with_ext_source(tmp_path: Path) -> None:
     _seed_ext_staged(lake, ext)
 
     result = build_combined_marts(data_dir=lake)
-    assert result.ext_run_id == "20260831T041648Z"
+    assert result.ext_run_id == "20000101T000000Z"
     assert result.ext_input_rows == 4
     assert result.ext_kept_rows == 2
     assert result.ext_unmatched_rows == 2
@@ -480,6 +482,19 @@ def test_split_resolvable_with_real_entities(tmp_path: Path) -> None:
     records = ext_rows_to_records(
         _ext_table([("示例小区144", "2026-03-15"), ("泰沙路", "2026-03-16")])
     )
-    kept, unmatched = split_resolvable(records, lookup)
+    kept, unmatched, excluded = split_resolvable(records, lookup)
     assert [r.community for r in kept] == ["示例小区144"]
     assert unmatched == Counter({"泰沙路": 1})
+    assert not excluded
+
+
+def test_district_gate_blocks_only_non_target_districts() -> None:
+    """区县守门：明确为示例城市非目标区（云溪）行政区 → 拦；其余一律不拦。"""
+    assert district_gate_blocked("临湖区") is True
+    assert district_gate_blocked("临湖") is True
+    assert district_gate_blocked("云溪区") is False
+    assert district_gate_blocked("云溪") is False
+    assert district_gate_blocked("板桥街道") is False  # 非行政区名（镇街）不拦
+    assert district_gate_blocked("") is False
+    assert district_gate_blocked("UNKNOWN") is False
+    assert district_gate_blocked(None) is False

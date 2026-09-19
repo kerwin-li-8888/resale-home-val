@@ -2,7 +2,7 @@
 
 import pytest
 
-from compsval.scalars import as_float
+from gz_property_valuation.scalars import as_float
 
 
 def test_accepts_int_and_float() -> None:

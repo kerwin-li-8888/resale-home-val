@@ -1,5 +1,5 @@
-compsval
-Copyright (c) 2026 compsval contributors
+gz_property_valuation (resale-home-val v2)
+Copyright (c) 2026 resale-home-val contributors
 
 This product includes software derived from Philly Fair Measure
 (https://github.com/nickhand/philly-fair-measure), taken at commit
@@ -11,9 +11,13 @@ snapshot writer, manifests, diff tooling, CLI scaffolding, scalars) are
 modified derivatives of that project. The comparable-sales valuation core
 (candidate selection, time adjustment, difference handling, robust
 aggregation, interval calibration, review lineage, backtesting) is original
-work written for this project.
+work written for the v1 release of this project, which was distributed under
+the historical package name `compsval` (retired and renamed to
+`gz_property_valuation` in v2). The quantified model layer introduced in v2
+(B0/M1/GBM controlled comparisons, candidate operations with shadow records,
+freeze & version fingerprinting, stop switch and fail-closed release gates)
+is original work layered on that core.
 
 The upstream license text is archived at
 `03-估值引擎/upstream/LICENSE-philly-fair-measure-e163eba6.txt`.
-Per-file provenance of the imported skeleton is documented in
-`03-估值引擎/UPSTREAM.md`.
+Per-file provenance of the imported skeleton is documented in `UPSTREAM.md`.

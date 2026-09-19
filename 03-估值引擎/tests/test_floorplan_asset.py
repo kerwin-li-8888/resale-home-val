@@ -16,18 +16,18 @@ from pathlib import Path
 import httpx
 from PIL import Image
 
-from compsval.ingest.floorplan_asset import (
+from gz_property_valuation.ingest.floorplan_asset import (
     ASSET_MANIFEST_FILENAME,
     AssetStatus,
     build_asset_manifest,
     sniff_image,
     url_suggested_extension,
 )
-from compsval.ingest.floorplan_download import (
+from gz_property_valuation.ingest.floorplan_download import (
     DownloadState,
     run_download,
 )
-from compsval.ingest.floorplan_selection import (
+from gz_property_valuation.ingest.floorplan_selection import (
     SelectionEntry,
     SelectionManifest,
 )
@@ -325,7 +325,7 @@ def test_write_staged_asset_table_roundtrip_columns(tmp_path: Path) -> None:
     """
     import pyarrow.parquet as pq
 
-    from compsval.ingest.floorplan_asset import (
+    from gz_property_valuation.ingest.floorplan_asset import (
         ASSET_STAGED_FILENAME,
         write_staged_asset_table,
     )

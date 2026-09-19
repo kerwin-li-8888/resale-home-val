@@ -9,8 +9,8 @@ import pyarrow as pa
 import pyarrow.csv as pacsv
 import pytest
 
-from compsval.contract.models import EventDatePrecision, MissingSemantics
-from compsval.ingest.parsers.fang_esf import (
+from gz_property_valuation.contract.models import EventDatePrecision, MissingSemantics
+from gz_property_valuation.ingest.parsers.fang_esf import (
     FANG_COMMUNITY_REGISTRY,
     parse_fang_esf_csv,
     resolve_fang_community,
@@ -19,8 +19,8 @@ from compsval.ingest.parsers.fang_esf import (
 REPO_ROOT = Path(__file__).resolve().parents[1].parent
 EVIDENCE_DIR = (
     REPO_ROOT
-    / "01-数据"
-    / "raw"
+    / "examples"
+    / "demo_raw"
     / "source=fang_esf"
     / "dataset=chengjiao"
     / "fetched_at=20260822"

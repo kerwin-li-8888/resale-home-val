@@ -15,9 +15,9 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 import pytest
 
-from compsval.contract.models import SubjectProperty
-from compsval.entities.backfill import CommunityIdLookup
-from compsval.ingest.attribute_enrich import (
+from gz_property_valuation.contract.models import SubjectProperty
+from gz_property_valuation.entities.backfill import CommunityIdLookup
+from gz_property_valuation.ingest.attribute_enrich import (
     ENRICH_COLUMNS,
     ENRICH_REF_COLUMN,
     build_attribute_index,
@@ -25,15 +25,15 @@ from compsval.ingest.attribute_enrich import (
     enrich_valid_sale,
     identity_key,
 )
-from compsval.ingest.xlsx_stage import ORDINARY_FILENAME
-from compsval.valuation.backtest import _build_subject
-from compsval.valuation.comparable import (
+from gz_property_valuation.ingest.xlsx_stage import ORDINARY_FILENAME
+from gz_property_valuation.valuation.backtest import _build_subject
+from gz_property_valuation.valuation.comparable import (
     SimilarityPolicy,
     _candidate_attrs,
 )
 
 _LOOKUP = CommunityIdLookup(
-    canonical={"示例小区121": ("C-XXXX0048", "测试权威表命中")},
+    canonical={"示例小区121": {"C-XXXX0048": "测试权威表命中"}},
     alias_consistent={},
     blocked={},
 )
@@ -213,7 +213,7 @@ def test_enrich_attributes_mart_writes_explicit_out_with_lineage(
         lake / "marts" / "valid_sale.parquet"
     ).column_names
     # 血缘：继承原 inputs + 追加 v2 引用；notes 记录命中率
-    from compsval.ingest.manifests import read_derived_manifest
+    from gz_property_valuation.ingest.manifests import read_derived_manifest
 
     manifest = read_derived_manifest(out)
     datasets = [item.dataset for item in manifest.inputs]

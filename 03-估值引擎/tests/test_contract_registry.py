@@ -4,8 +4,8 @@ snapshots with live sha256 fingerprints that stay stable across re-runs."""
 import hashlib
 from pathlib import Path
 
-from compsval.contract import registry
-from compsval.contract.models import (
+from gz_property_valuation.contract import registry
+from gz_property_valuation.contract.models import (
     SnapshotFormat,
     SnapshotParseStatus,
     SourceRole,

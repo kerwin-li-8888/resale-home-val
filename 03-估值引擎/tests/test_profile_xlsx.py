@@ -1,7 +1,7 @@
 """EXTFP0-D 普通住宅画像与字段映射的离线测试。
 
 用小而确定的 XLSX fixture（用 openpyxl 在 tmp_path 生成，保证真实可解析结构）
-验证画像统计正确，绝不触碰真实外部数据文件，也不访问网络。
+验证画像统计正确，绝不触碰真实外源数据文件，也不访问网络。
 """
 
 from __future__ import annotations
@@ -12,7 +12,7 @@ from pathlib import Path
 from openpyxl import Workbook
 from pytest import raises
 
-from compsval.ingest.profile_xlsx import (
+from gz_property_valuation.ingest.profile_xlsx import (
     AREA_TARGETS,
     PROFILE_RULE_VERSION,
     profile_xlsx,

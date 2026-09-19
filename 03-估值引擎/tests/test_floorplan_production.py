@@ -17,7 +17,7 @@ import httpx
 import polars as pl
 import pytest
 
-from compsval.ingest.floorplan_batch_report import (
+from gz_property_valuation.ingest.floorplan_batch_report import (
     ConsistencyEntry,
     IntegrityReport,
     OutOfScopeEntry,
@@ -28,10 +28,10 @@ from compsval.ingest.floorplan_batch_report import (
     check_batch_integrity,
     valid_denominator_annotations,
 )
-from compsval.ingest.floorplan_download import run_download
-from compsval.ingest.floorplan_ocr import OcrRunRecord, OcrState, OcrTaskRecord
-from compsval.ingest.floorplan_ocr_contract import OcrCostConfig, OcrRequestContract
-from compsval.ingest.floorplan_production import (
+from gz_property_valuation.ingest.floorplan_download import run_download
+from gz_property_valuation.ingest.floorplan_ocr import OcrRunRecord, OcrState, OcrTaskRecord
+from gz_property_valuation.ingest.floorplan_ocr_contract import OcrCostConfig, OcrRequestContract
+from gz_property_valuation.ingest.floorplan_production import (
     CHANGE_BUDGET_CAP_YUAN,
     CHANGE_REF,
     EXTFP6_CHANGE_BUDGET_CAP_YUAN,
@@ -66,8 +66,8 @@ from compsval.ingest.floorplan_production import (
     record_batch_cost,
     supported_community_names,
 )
-from compsval.ingest.floorplan_selection import build_selection
-from compsval.ingest.floorplan_transcribe import AnnotationState, RoomAnnotationRecord
+from gz_property_valuation.ingest.floorplan_selection import build_selection
+from gz_property_valuation.ingest.floorplan_transcribe import AnnotationState, RoomAnnotationRecord
 
 # ---------------------------------------------------------------------------
 # fixtures：合成 staged parquet + 合成 entities 表
@@ -142,7 +142,7 @@ def _write_entities(entities_dir: Path) -> None:
 
 
 def _write_entities_with_pending_alias(entities_dir: Path) -> None:
-    """EXTFP6 fixture：在基础 entities 上追加一致富基别名与待定别名（blocked 对照）。"""
+    """EXTFP6 fixture：在基础 entities 上追加一致示例小区130别名与待定别名（blocked 对照）。"""
     _write_entities(entities_dir)
     alias_path = entities_dir / "community_alias.parquet"
     alias = pl.read_parquet(alias_path)
@@ -325,7 +325,7 @@ class TestFullHistorySelection:
 
     @pytest.fixture()
     def staged_full(self, tmp_path: Path) -> Path:
-        """在基础 staged 上加：富基A区窗外行 + 待定别名行（G9）。"""
+        """在基础 staged 上加：示例小区130A区窗外行 + 待定别名行（G9）。"""
         path = tmp_path / "staged_full.parquet"
         rows = _write_staged(path)
         extra = pl.DataFrame(
@@ -361,7 +361,7 @@ class TestFullHistorySelection:
             **self._fullhistory_kwargs(),  # type: ignore[arg-type]
         )
         # 命中：G1（标准名）+ G2（一致别名）+ G3（窗外但全历史入池）
-        #       + G4/G8（富基A区窗内/窗外，经一致别名命中）
+        #       + G4/G8（示例小区130A区窗内/窗外，经一致别名命中）
         # G9 待定别名 blocked
         assert manifest.record_count == 5
         assert manifest.change_ref == EXTFP6_CHANGE_REF
@@ -371,7 +371,7 @@ class TestFullHistorySelection:
         assert manifest.selection_rule_version == "EXTFP6-SELECT-1.0"
         assert manifest.workpackage_ref == "EXTFP6"
         assert manifest.matched_community_counts == {
-            "C-XXXX0063": 2,  # G4 + G8 富基A区
+            "C-XXXX0063": 2,  # G4 + G8 示例小区130A区
             "C-XXXX0069": 3,  # G1 + G2 + G3
         }
         # 全历史口径：matched 无窗口外概念
@@ -525,7 +525,7 @@ class TestDiskGate:
 
 
 def _make_contract(tmp_path: Path, manifest_path: Path) -> BatchContract:
-    from compsval.ingest.floorplan_production import ProductionSelectionManifest
+    from gz_property_valuation.ingest.floorplan_production import ProductionSelectionManifest
 
     manifest = ProductionSelectionManifest(
         selection_rule_version="EXTFP4-SELECT-1.0",
@@ -583,7 +583,7 @@ class TestDispatchGate:
             assert_dispatch_allowed(
                 contract,
                 __import__(
-                    "compsval.ingest.floorplan_production",
+                    "gz_property_valuation.ingest.floorplan_production",
                     fromlist=["load_batch_confirmation"],
                 ).load_batch_confirmation(tmp_path / "nope.json"),
                 planned_images=1,
@@ -755,7 +755,7 @@ class TestStopConditions:
         assert AutoStopCondition.COST_CAP.value in conditions
 
     def test_pre_dispatch_scope_and_disk(self, tmp_path: Path) -> None:
-        from compsval.ingest.floorplan_selection import SelectionManifest
+        from gz_property_valuation.ingest.floorplan_selection import SelectionManifest
 
         manifest = SelectionManifest(
             selection_rule_version="v",
@@ -785,7 +785,7 @@ class TestStopConditions:
             total = 10
             used = 10
 
-        import compsval.ingest.floorplan_production as fp
+        import gz_property_valuation.ingest.floorplan_production as fp
 
         original = fp.shutil.disk_usage
         fp.shutil.disk_usage = lambda _p: FakeUsage()  # type: ignore[assignment]

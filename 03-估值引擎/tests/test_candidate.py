@@ -5,7 +5,7 @@
 ② 排除有理由且逐条可溯源（comp_candidate 全量留痕含排除行）；
 ③ 无必要字段/未匹配/异常记录排除而非静默纳入；
 ④ 模型字段与数据字典 §3.9-3.11 一致（缺失用 UNKNOWN/None 不用 0）；
-⑤ ``compsval catalog`` 可列估值中间结果（val_ 视图）；
+⑤ ``gz_property_valuation catalog`` 可列估值中间结果（val_ 视图）；
 ⑥ ruff/mypy/pytest 通过。
 """
 
@@ -22,16 +22,16 @@ import pyarrow.parquet as pq
 import pytest
 from pydantic import ValidationError
 
-from compsval import catalog
-from compsval.contract import models as contract_models
-from compsval.contract.models import CompCandidate, SubjectProperty
-from compsval.ingest.manifests import (
+from gz_property_valuation import catalog
+from gz_property_valuation.contract import models as contract_models
+from gz_property_valuation.contract.models import CompCandidate, SubjectProperty
+from gz_property_valuation.ingest.manifests import (
     DerivedManifest,
     InputRef,
     write_derived_manifest,
 )
-from compsval.ingest.stage import MARTS_LAYER, VALID_SALE_FILENAME
-from compsval.valuation.candidate import (
+from gz_property_valuation.ingest.stage import MARTS_LAYER, VALID_SALE_FILENAME
+from gz_property_valuation.valuation.candidate import (
     COMP_CANDIDATE_FILENAME,
     DEFAULT_RULE_VERSION,
     REASON_ABNORMAL,
@@ -259,7 +259,7 @@ def test_selected_candidate_has_reason_and_no_fabricated_tier() -> None:
     assert candidate.similarity is None
 
 
-# ---- ⑤ 目录注册：compsval catalog 可列估值中间结果（val_ 视图） ----
+# ---- ⑤ 目录注册：gz_property_valuation catalog 可列估值中间结果（val_ 视图） ----
 def _write_valid_sale_mart(
     data_dir: Path,
     table: pa.Table,

@@ -5,7 +5,7 @@
 （stage_xlsx）→ 质量报告（build_xlsx_quality_report），覆盖正常/边界/缺失/
 反例四类场景；并验证 schema 向后兼容（SnapshotManifest.mime_type 旧 JSON 可
 反序列化）与重复运行一致。全部离线（openpyxl 在 tmp_path 合成），不触碰真实
-外部数据文件，不访问网络。
+外源数据文件，不访问网络。
 """
 
 from __future__ import annotations
@@ -18,14 +18,14 @@ from pathlib import Path
 import pyarrow.parquet as pq
 from openpyxl import Workbook
 
-from compsval.ingest.binary_snapshot import write_binary_snapshot
-from compsval.ingest.manifests import SnapshotManifest, read_derived_manifest
-from compsval.ingest.xlsx_parse import iter_parse_xlsx, summarize
-from compsval.ingest.xlsx_quality import (
+from gz_property_valuation.ingest.binary_snapshot import write_binary_snapshot
+from gz_property_valuation.ingest.manifests import SnapshotManifest, read_derived_manifest
+from gz_property_valuation.ingest.xlsx_parse import iter_parse_xlsx, summarize
+from gz_property_valuation.ingest.xlsx_quality import (
     build_xlsx_quality_report,
     report_to_dict,
 )
-from compsval.ingest.xlsx_stage import (
+from gz_property_valuation.ingest.xlsx_stage import (
     ORDINARY_FILENAME,
     SALE_RECORD_FILENAME,
     stage_xlsx,
@@ -157,7 +157,7 @@ def test_full_chain_binary_to_quality(tmp_path: Path) -> None:
     assert inp.content_hash == bs.manifest.files[0].sha256
 
     # 4. 质量报告（守恒 + 统计，真实 manifest 呈现）
-    from compsval.ingest.xlsx_quality import load_staged_tables
+    from gz_property_valuation.ingest.xlsx_quality import load_staged_tables
 
     sale, ordinary, manifests, run_id = load_staged_tables(lake)
     quality = build_xlsx_quality_report(

@@ -15,9 +15,9 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 import pytest
 
-from compsval import catalog
-from compsval.reporting.envelope import InvalidInputError
-from compsval.valuation.backtest import (
+from gz_property_valuation import catalog
+from gz_property_valuation.reporting.envelope import InvalidInputError
+from gz_property_valuation.valuation.backtest import (
     BacktestConfig,
     compute_metrics,
     filter_pool,
@@ -146,10 +146,10 @@ def synthetic_market_series() -> pa.Table:
 
 
 def write_synthetic_lake(root: Path) -> None:
-    from compsval.entities import building as eb
-    from compsval.entities import community as ec
-    from compsval.entities import market_series as ems
-    from compsval.ingest.stage import MARTS_LAYER, VALID_SALE_FILENAME
+    from gz_property_valuation.entities import building as eb
+    from gz_property_valuation.entities import community as ec
+    from gz_property_valuation.entities import market_series as ems
+    from gz_property_valuation.ingest.stage import MARTS_LAYER, VALID_SALE_FILENAME
 
     data_dir = root
     marts = data_dir / MARTS_LAYER
@@ -442,7 +442,7 @@ def test_run_backtest_missing_dependency(tmp_path: Path) -> None:
     pq.write_table(synthetic_valid_sale(), marts / "valid_sale.parquet")
     with pytest.raises(Exception) as exc_info:
         run_backtest(BacktestConfig(), data_dir=lake)
-    from compsval.reporting.envelope import MissingDependencyError
+    from gz_property_valuation.reporting.envelope import MissingDependencyError
 
     assert isinstance(exc_info.value, MissingDependencyError)
 
@@ -450,7 +450,7 @@ def test_run_backtest_missing_dependency(tmp_path: Path) -> None:
 def test_run_backtest_empty_lake(tmp_path: Path) -> None:
     lake = tmp_path / "lake"
     write_synthetic_lake(lake)
-    from compsval.ingest.stage import MARTS_LAYER, VALID_SALE_FILENAME
+    from gz_property_valuation.ingest.stage import MARTS_LAYER, VALID_SALE_FILENAME
 
     empty_sales = synthetic_valid_sale().slice(0, 0)
     pq.write_table(empty_sales, lake / MARTS_LAYER / VALID_SALE_FILENAME)
@@ -588,8 +588,8 @@ def test_run_backtest_policy_products_isolated(tmp_path: Path) -> None:
 
 
 def test_backtest_report_accepts_backtest_dir_override(tmp_path: Path) -> None:
-    """compsval backtest report 可经 backtest_dir 指向实验产物目录（2.4）。"""
-    from compsval.reporting.backtest_report import build_backtest_report
+    """gz_property_valuation backtest report 可经 backtest_dir 指向实验产物目录（2.4）。"""
+    from gz_property_valuation.reporting.backtest_report import build_backtest_report
 
     lake = tmp_path / "lake"
     write_synthetic_lake(lake)
@@ -616,7 +616,7 @@ def test_backtest_report_accepts_backtest_dir_override(tmp_path: Path) -> None:
 def test_cli_backtest_valid(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    from compsval.cli import main
+    from gz_property_valuation.cli import main
 
     lake = tmp_path / "lake"
     write_synthetic_lake(lake)
@@ -634,7 +634,7 @@ def test_cli_backtest_valid(
 def test_cli_backtest_missing_config(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    from compsval.cli import main
+    from gz_property_valuation.cli import main
 
     rc = main(["backtest", "run", "--config", str(tmp_path / "nope.yaml")])
     captured = capsys.readouterr()
@@ -647,7 +647,7 @@ def test_cli_backtest_missing_config(
 def test_cli_backtest_missing_dependency(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    from compsval.cli import main
+    from gz_property_valuation.cli import main
 
     lake = tmp_path / "lake"
     marts = lake / "marts"

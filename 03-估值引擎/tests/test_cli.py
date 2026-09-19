@@ -1,4 +1,4 @@
-"""compsval CLI skeleton: version, catalog (empty + populated), and sql over the
+"""gz_property_valuation CLI skeleton: version, catalog (empty + populated), and sql over the
 latest raw snapshot. `system check` is exercised separately (it shells out)."""
 
 from datetime import UTC, datetime
@@ -7,19 +7,19 @@ from pathlib import Path
 import pyarrow as pa
 import pytest
 
-from compsval import __version__, cli
-from compsval.ingest.snapshots import write_raw_snapshot
+from gz_property_valuation import __version__, cli
+from gz_property_valuation.ingest.snapshots import write_raw_snapshot
 
 
 def test_version_prints_package_name_and_version(capsys: pytest.CaptureFixture[str]) -> None:
     assert cli.main(["version"]) == 0
-    assert capsys.readouterr().out.strip() == f"compsval {__version__}"
+    assert capsys.readouterr().out.strip() == f"gz_property_valuation {__version__}"
 
 
 def test_no_args_prints_help_and_fails(capsys: pytest.CaptureFixture[str]) -> None:
     assert cli.main([]) == 2
     out = capsys.readouterr().out
-    assert "usage: compsval" in out
+    assert "usage: gz_property_valuation" in out
 
 
 def test_catalog_empty_reports_no_snapshots(

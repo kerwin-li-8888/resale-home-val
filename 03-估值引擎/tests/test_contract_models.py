@@ -7,8 +7,8 @@ from typing import Any
 import pytest
 from pydantic import ValidationError
 
-from compsval.contract import models
-from compsval.contract.models import (
+from gz_property_valuation.contract import models
+from gz_property_valuation.contract.models import (
     ListingEvent,
     ListingPriceBenchmark,
     MissingSemantics,
@@ -18,7 +18,7 @@ from compsval.contract.models import (
     SnapshotFormat,
     SnapshotParseStatus,
 )
-from compsval.contract.sample_data import (
+from gz_property_valuation.contract.sample_data import (
     sample_listings,
     sample_sales,
     sample_snapshots,

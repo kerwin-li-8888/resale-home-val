@@ -2,7 +2,7 @@
 
 对照 specs/valuation-aggregation-policy 验收：
 - 默认策略与现行为逐值等价（合成；真实回放抽样对拍另证于
-  04-校验/aggregator-experiment/evidence/）；
+  aggregator-experiment/evidence/（校验证据））；
 - 未登记策略标识拒绝（构造期 + compute_center + apply_aggregation），且不得是
   ValueError（防止 run_estimate 兜底误判为"信息不足"）；
 - 每候选确定性 + 退化标记；区间/可信度输入跨候选不变；每候选单调性回归。
@@ -16,9 +16,9 @@ from typing import Any
 import pyarrow.parquet as pq
 import pytest
 
-from compsval.contract.models import ConfidenceLevel
-from compsval.ingest.manifests import InputRef
-from compsval.valuation.aggregation import (
+from gz_property_valuation.contract.models import ConfidenceLevel
+from gz_property_valuation.ingest.manifests import InputRef
+from gz_property_valuation.valuation.aggregation import (
     AGGREGATION_POLICIES,
     DEFAULT_AGGREGATION_POLICY,
     AdjustableComp,

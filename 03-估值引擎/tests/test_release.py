@@ -4,7 +4,7 @@
 双闸：``formal_release_enabled``（发布开关，G5 通过前 False）+ 目标小区在
 ScopePolicy 纳入范围（``_in_formal_scope``）。合成数据验证，不依赖真实湖。
 
-CX-WP9-02 修复追加：受控 formal 启用路径——官方 CLI ``compsval estimate`` 读取
+CX-WP9-02 修复追加：受控 formal 启用路径——官方 CLI ``gz_property_valuation estimate`` 读取
 ``<data_dir>/release/release_decision.json``（RELEASE1-001 用户发布决定的
 运行载体）；缺失配置/未授权记录一律保持候选/参考。覆盖正常、范围外、
 缺失配置、未授权（released=false/缺字段/坏 JSON/非对象）反例。
@@ -22,19 +22,19 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 import pytest
 
-from compsval import cli
-from compsval.contract.models import SubjectProperty
-from compsval.entities import building as entities_building
-from compsval.entities import community as entities_community
-from compsval.entities import market_series as entities_market_series
-from compsval.ingest.stage import MARTS_LAYER, VALID_SALE_FILENAME
-from compsval.valuation.estimate import (
+from gz_property_valuation import cli
+from gz_property_valuation.contract.models import SubjectProperty
+from gz_property_valuation.entities import building as entities_building
+from gz_property_valuation.entities import community as entities_community
+from gz_property_valuation.entities import market_series as entities_market_series
+from gz_property_valuation.ingest.stage import MARTS_LAYER, VALID_SALE_FILENAME
+from gz_property_valuation.valuation.estimate import (
     EstimateOutcome,
     load_release_decision,
     release_decision_path,
     run_estimate,
 )
-from compsval.valuation.scope import (
+from gz_property_valuation.valuation.scope import (
     ACTIVE_SCOPE_POLICY_VERSION,
     scope_policy_filename,
     scope_policy_schema,
@@ -268,7 +268,7 @@ _VALID_RELEASE_DECISION: dict[str, Any] = {
     "released": True,
     "decided_at": "2026-08-23",
     "decided_by": "用户",
-    "gate_evidence": "04-校验/G5-发布门禁证据-V0.1.md",
+    "gate_evidence": "gate-evidence-V0.1.md",
 }
 
 

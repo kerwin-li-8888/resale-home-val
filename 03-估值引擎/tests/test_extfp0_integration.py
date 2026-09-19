@@ -2,7 +2,7 @@
 
 把 EXTFP0 各原子任务交付串成一条合成数据链路，用小而确定的 XLSX fixture
 （openpyxl 在 tmp_path 生成，保证真实可解析结构）验证跨模块协作、来源登记、
-向后兼容与重复运行一致。绝不触碰真实外部数据文件，也不访问网络。
+向后兼容与重复运行一致。绝不触碰真实外源数据文件，也不访问网络。
 
 链路：``resolve_source_dir``（来源登记 lianjia_ext）
     → ``import_local_file``（XLSX 结构化快照，ERC-EXTFP0-C）
@@ -24,14 +24,14 @@ from pathlib import Path
 
 from openpyxl import Workbook
 
-from compsval.contract.models import RawSnapshot, SnapshotFormat
-from compsval.ingest.floorplan_profile import (
+from gz_property_valuation.contract.models import RawSnapshot, SnapshotFormat
+from gz_property_valuation.ingest.floorplan_profile import (
     SELECTION_RULE_VERSION,
     UrlListStatus,
     profile_floorplan,
 )
-from compsval.ingest.import_file import import_local_file, resolve_source_dir
-from compsval.ingest.profile_xlsx import PROFILE_RULE_VERSION, profile_xlsx
+from gz_property_valuation.ingest.import_file import import_local_file, resolve_source_dir
+from gz_property_valuation.ingest.profile_xlsx import PROFILE_RULE_VERSION, profile_xlsx
 
 # 与真实外部链家成交 Excel 表头对齐的合成表头
 HEADERS = [

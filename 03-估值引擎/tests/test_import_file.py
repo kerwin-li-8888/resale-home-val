@@ -2,7 +2,7 @@
 
 Covers the generic import primitive (text lines / CSV), source resolution,
 manifest provenance, single-snapshot re-run semantics, and the
-``compsval ingest file`` CLI surface.
+``gz_property_valuation ingest file`` CLI surface.
 """
 
 from datetime import UTC, datetime
@@ -10,15 +10,15 @@ from pathlib import Path
 
 import pytest
 
-from compsval import cli
-from compsval.catalog import list_snapshots
-from compsval.ingest.import_file import (
+from gz_property_valuation import cli
+from gz_property_valuation.catalog import list_snapshots
+from gz_property_valuation.ingest.import_file import (
     file_to_table,
     import_local_file,
     resolve_source_dir,
 )
-from compsval.ingest.manifests import read_manifest
-from compsval.ingest.snapshots import DATA_FILENAME
+from gz_property_valuation.ingest.manifests import read_manifest
+from gz_property_valuation.ingest.snapshots import DATA_FILENAME
 
 
 def test_file_to_table_txt_preserves_lines(tmp_path: Path) -> None:

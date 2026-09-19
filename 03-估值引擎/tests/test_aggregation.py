@@ -20,9 +20,9 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 import pytest
 
-from compsval.contract.models import ConfidenceLevel, OutputStatus, SubjectProperty
-from compsval.ingest.manifests import InputRef
-from compsval.valuation.aggregation import (
+from gz_property_valuation.contract.models import ConfidenceLevel, OutputStatus, SubjectProperty
+from gz_property_valuation.ingest.manifests import InputRef
+from gz_property_valuation.valuation.aggregation import (
     DOMINANCE_THRESHOLD,
     AdjustableComp,
     AggregationPolicy,
@@ -33,11 +33,11 @@ from compsval.valuation.aggregation import (
     effective_sample_size,
     weighted_quantile,
 )
-from compsval.valuation.candidate import (
+from gz_property_valuation.valuation.candidate import (
     COMP_CANDIDATE_FILENAME,
     VALUATION_LAYER,
 )
-from compsval.valuation.time_adjustment import COMP_ADJUSTMENT_FILENAME
+from gz_property_valuation.valuation.time_adjustment import COMP_ADJUSTMENT_FILENAME
 
 _COMMUNITY = "C-XXXX0013"
 _VAL_DATE = date(2026, 7, 21)

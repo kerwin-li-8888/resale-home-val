@@ -7,21 +7,21 @@ from pathlib import Path
 import pyarrow as pa
 import pyarrow.parquet as pq
 
-from compsval.ingest.floorplan_asset import (
+from gz_property_valuation.ingest.floorplan_asset import (
     ASSET_MANIFEST_FILENAME,
     AssetStatus,
     FloorplanAsset,
     FloorplanAssetRun,
 )
-from compsval.ingest.floorplan_ocr import OcrRunRecord, OcrState, OcrTaskRecord
-from compsval.ingest.floorplan_ocr_parse import (
+from gz_property_valuation.ingest.floorplan_ocr import OcrRunRecord, OcrState, OcrTaskRecord
+from gz_property_valuation.ingest.floorplan_ocr_parse import (
     OcrParseRecord,
     OcrWordRecord,
     WordParseState,
     normalize_text,
     write_word_table,
 )
-from compsval.ingest.floorplan_transcribe import (
+from gz_property_valuation.ingest.floorplan_transcribe import (
     RoomAnnotationRecord,
     write_annotation_table,
 )

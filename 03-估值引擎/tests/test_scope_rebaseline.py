@@ -15,7 +15,7 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 import pytest
 
-from compsval.valuation.scope import (
+from gz_property_valuation.valuation.scope import (
     DEFAULT_RULE_VERSION,
     SCOPE_V12_AS_OF,
     build_scope_policy_v1_2,

@@ -1,7 +1,7 @@
 """EXTFP1-D 普通住宅 staged 表的离线测试。
 
 用 openpyxl 合成 XLSX fixture 验证：全量 sale_record 表构建、普通住宅过滤
-守恒、血缘 manifest、原子写与 CLI。绝不触碰真实外部数据文件，也不访问网络。
+守恒、血缘 manifest、原子写与 CLI。绝不触碰真实外源数据文件，也不访问网络。
 """
 
 from __future__ import annotations
@@ -13,10 +13,10 @@ import pyarrow.parquet as pq
 import pytest
 from openpyxl import Workbook
 
-from compsval import cli
-from compsval.ingest.manifests import InputRef, read_derived_manifest
-from compsval.ingest.xlsx_parse import iter_parse_xlsx
-from compsval.ingest.xlsx_stage import (
+from gz_property_valuation import cli
+from gz_property_valuation.ingest.manifests import InputRef, read_derived_manifest
+from gz_property_valuation.ingest.xlsx_parse import iter_parse_xlsx
+from gz_property_valuation.ingest.xlsx_stage import (
     ORDINARY_FILENAME,
     ORDINARY_RESIDENTIAL_TABLE,
     SALE_RECORD_FILENAME,

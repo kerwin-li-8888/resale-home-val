@@ -20,7 +20,7 @@ from typing import Any
 
 import pyarrow.parquet as pq
 
-from compsval.entities.building import (
+from gz_property_valuation.entities.building import (
     BUILDING_FILENAME,
     BUILDING_TABLE,
     MatchConfidence,
@@ -31,10 +31,10 @@ from compsval.entities.building import (
     record_to_evidence,
     write_building_entity,
 )
-from compsval.entities.candidates import candidates_all
-from compsval.entities.community import ENTITIES_LAYER, community_id_of
-from compsval.ingest.manifests import read_derived_manifest
-from compsval.ingest.parsers.lianjia import LianjiaRecord
+from gz_property_valuation.entities.candidates import candidates_all
+from gz_property_valuation.entities.community import ENTITIES_LAYER, community_id_of
+from gz_property_valuation.ingest.manifests import read_derived_manifest
+from gz_property_valuation.ingest.parsers.lianjia import LianjiaRecord
 
 _SNAPSHOT_ID = "20260821T031400Z"
 
@@ -280,7 +280,7 @@ def test_write_building_entity_writes_table_and_manifest(tmp_path: Path) -> None
         table,
         data_dir=tmp_path,
         inputs=[
-            __import__("compsval.ingest.manifests", fromlist=["InputRef"]).InputRef(  # noqa: E501
+            __import__("gz_property_valuation.ingest.manifests", fromlist=["InputRef"]).InputRef(  # noqa: E501
                 dataset="chengjiao_list", fetched_at=_SNAPSHOT_ID
             )
         ],

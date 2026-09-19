@@ -10,8 +10,8 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 import pytest
 
-from compsval import __version__
-from compsval.ingest.manifests import (
+from gz_property_valuation import __version__
+from gz_property_valuation.ingest.manifests import (
     DerivedManifest,
     InputRef,
     SnapshotManifest,
@@ -20,7 +20,7 @@ from compsval.ingest.manifests import (
     write_derived_manifest,
     write_manifest,
 )
-from compsval.ingest.snapshots import write_raw_snapshot
+from gz_property_valuation.ingest.snapshots import write_raw_snapshot
 
 ROW = {"house_id": ["1", "2"], "price": [3_200_000.0, 4_500_000.0]}
 

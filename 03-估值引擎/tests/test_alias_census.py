@@ -20,12 +20,12 @@ import pyarrow.compute as pc
 import pyarrow.parquet as pq
 import pytest
 
-from compsval.contract.models import AliasConflictStatus, CommunityAlias
-from compsval.entities.alias import (
+from gz_property_valuation.contract.models import AliasConflictStatus, CommunityAlias
+from gz_property_valuation.entities.alias import (
     ALIAS_FILENAME,
     build_alias_entity,
 )
-from compsval.entities.alias_census import (
+from gz_property_valuation.entities.alias_census import (
     _ALIAS_REGISTRY_OVERRIDES,
     _CENSUS_ALIAS_MAPPINGS,
     _CENSUS_PENDING_OVERRIDES,
@@ -33,12 +33,12 @@ from compsval.entities.alias_census import (
     build_alias_census_backfill,
     census_alias_rows,
 )
-from compsval.entities.backfill import (
+from gz_property_valuation.entities.backfill import (
     BackfillOutcome,
     load_community_lookup,
     resolve_community_id,
 )
-from compsval.entities.community import build_community_entity
+from gz_property_valuation.entities.community import build_community_entity
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 _VERDICTS_CSV = (

@@ -17,13 +17,13 @@ from pathlib import Path
 
 import pyarrow.parquet as pq
 
-from compsval.entities.alias import (
+from gz_property_valuation.entities.alias import (
     ALIAS_FILENAME,
     build_alias_entity,
 )
-from compsval.entities.alias_census import build_alias_census_backfill
-from compsval.entities.community import COMMUNITY_FILENAME, build_community_entity
-from compsval.entities.community_family import (
+from gz_property_valuation.entities.alias_census import build_alias_census_backfill
+from gz_property_valuation.entities.community import COMMUNITY_FILENAME, build_community_entity
+from gz_property_valuation.entities.community_family import (
     ALIAS_ADDITION,
     FAMILIES,
     FAMILY_FILENAME,

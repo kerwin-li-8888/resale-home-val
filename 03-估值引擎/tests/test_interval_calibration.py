@@ -19,22 +19,22 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 import pytest
 
-from compsval.contract.models import ConfidenceLevel, SubjectProperty
-from compsval.ingest.manifests import InputRef
-from compsval.reporting.envelope import (
+from gz_property_valuation.contract.models import ConfidenceLevel, SubjectProperty
+from gz_property_valuation.ingest.manifests import InputRef
+from gz_property_valuation.reporting.envelope import (
     InvalidInputError,
     MissingDependencyError,
 )
-from compsval.valuation.aggregation import (
+from gz_property_valuation.valuation.aggregation import (
     AdjustableComp,
     AggregationPolicy,
     apply_aggregation,
 )
-from compsval.valuation.candidate import (
+from gz_property_valuation.valuation.candidate import (
     COMP_CANDIDATE_FILENAME,
     VALUATION_LAYER,
 )
-from compsval.valuation.interval_calibration import (
+from gz_property_valuation.valuation.interval_calibration import (
     INTERVAL_CALIBRATION_RULE_VERSION,
     LEGACY_RULE_VERSION,
     ExpansionParams,
@@ -42,7 +42,7 @@ from compsval.valuation.interval_calibration import (
     expand_interval,
     load_interval_calibration,
 )
-from compsval.valuation.time_adjustment import COMP_ADJUSTMENT_FILENAME
+from gz_property_valuation.valuation.time_adjustment import COMP_ADJUSTMENT_FILENAME
 
 _COMMUNITY = "C-XXXX0013"
 _OTHER_COMMUNITY = "C-XXXX0079"
@@ -167,7 +167,7 @@ def _write_valuation_inputs(tmp_path: Path) -> Path:
 
 
 def _config_layer_params(*, k: Decimal, m: Decimal) -> Any:
-    from compsval.valuation.interval_calibration import ExpansionParams
+    from gz_property_valuation.valuation.interval_calibration import ExpansionParams
 
     return ExpansionParams(k=k, m=m, n=10)
 

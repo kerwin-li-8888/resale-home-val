@@ -22,7 +22,7 @@
 
 ### Requirement: 数据与隐私内容排除
 
-发布副本 SHALL NOT 包含以下任何内容：平台原始快照（`01-数据/raw/` 全部）、census 与 ScopePolicy 等派生数据、真实标的估值条目（`RUN-SUBJ-USER-*` 与 `RUN-SUBJ-SHADOW-REAL-*` 等）、决策支持个人文档（`00-项目总控/决策支持-*`）、`openspec/changes/` 执行历史、开发临时文件（`.trae/`、`_probe_*`、`__pycache__`、`node_modules` 等）。
+发布副本 SHALL NOT 包含以下任何内容：平台原始快照（`01-数据/raw/` 全部）、census 与 ScopePolicy 等派生数据、真实标的估值条目（`RUN-SUBJ-USER-*` 与 `RUN-SUBJ-SHADOW-REAL-*` 等）、决策支持个人文档、`openspec/changes/` 执行历史、开发临时文件（`.trae/`、`_probe_*`、`__pycache__`、`node_modules` 等）。
 
 #### Scenario: 排除清单核查
 

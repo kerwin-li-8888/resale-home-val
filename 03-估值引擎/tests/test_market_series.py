@@ -20,9 +20,9 @@ from pathlib import Path
 
 import pyarrow.parquet as pq
 
-from compsval.contract.models import SourceStrength
-from compsval.entities.community import ENTITIES_LAYER
-from compsval.entities.market_series import (
+from gz_property_valuation.contract.models import SourceStrength
+from gz_property_valuation.entities.community import ENTITIES_LAYER
+from gz_property_valuation.entities.market_series import (
     F58_MONTH,
     F58_SOURCE_ID,
     MARKET_FILENAME,
@@ -34,8 +34,8 @@ from compsval.entities.market_series import (
     series_id_of,
     write_market_series_entity,
 )
-from compsval.ingest.clean import SALE_EVENT_TABLE, STAGED_LAYER
-from compsval.ingest.listing import LISTING_EVENT_TABLE
+from gz_property_valuation.ingest.clean import SALE_EVENT_TABLE, STAGED_LAYER
+from gz_property_valuation.ingest.listing import LISTING_EVENT_TABLE
 
 #: 名录 §1.1 真实 58 板块均价（2026-08）——8 个有值板块（板块名, 均价 元/㎡）。
 _REAL_BLOCKS: tuple[tuple[str, int], ...] = (

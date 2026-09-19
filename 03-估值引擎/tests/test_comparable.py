@@ -20,19 +20,19 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 import pytest
 
-from compsval.contract.models import CompCandidate, SubjectProperty
-from compsval.ingest.manifests import (
+from gz_property_valuation.contract.models import CompCandidate, SubjectProperty
+from gz_property_valuation.ingest.manifests import (
     DerivedManifest,
     InputRef,
     write_derived_manifest,
 )
-from compsval.ingest.stage import MARTS_LAYER, VALID_SALE_FILENAME
-from compsval.valuation.candidate import (
+from gz_property_valuation.ingest.stage import MARTS_LAYER, VALID_SALE_FILENAME
+from gz_property_valuation.valuation.candidate import (
     DEFAULT_RULE_VERSION,
     VALUATION_LAYER,
     build_valuation,
 )
-from compsval.valuation.comparable import (
+from gz_property_valuation.valuation.comparable import (
     REASON_COMP_UNCONFIRMED,
     REASON_NO_TIER,
     REASON_NOT_COMPETITIVE,

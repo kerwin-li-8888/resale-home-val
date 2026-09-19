@@ -1,4 +1,4 @@
-"""EXTFP2-F：compsval floorplan CLI 异常分支离线测试。
+"""EXTFP2-F：gz_property_valuation floorplan CLI 异常分支离线测试。
 
 补齐 RV-EXTFP2-B-01#F1（select/download 的 CLI 异常分支）与
 RV-EXTFP2-E-01#F3（e2e 的编排分支，含 ``--sample-list`` 缺省回退路径）的
@@ -18,9 +18,9 @@ from pathlib import Path
 import polars as pl
 import pytest
 
-from compsval import cli
-from compsval.ingest.floorplan_profile import UrlListStatus
-from compsval.ingest.floorplan_selection import (
+from gz_property_valuation import cli
+from gz_property_valuation.ingest.floorplan_profile import UrlListStatus
+from gz_property_valuation.ingest.floorplan_selection import (
     SelectionEntry,
     SelectionManifest,
 )
@@ -32,7 +32,7 @@ EVIL_URL = "http://evil.example.com/8.jpg?from=ke.com"
 
 
 def _entry(rid: str, row: int, seq: int, url: str, domain: str = DOMAIN) -> SelectionEntry:
-    from compsval.ingest.floorplan_selection import _normalize_https
+    from gz_property_valuation.ingest.floorplan_selection import _normalize_https
 
     return SelectionEntry(
         source_record_id=rid,
@@ -519,7 +519,7 @@ def test_e2e_cli_explicit_sample_list_path(
 def test_floorplan_no_subcommand_usage(capsys: pytest.CaptureFixture[str]) -> None:
     rc = cli.main(["floorplan"])
     assert rc == 2
-    assert "usage: compsval floorplan" in capsys.readouterr().err
+    assert "usage: gz_property_valuation floorplan" in capsys.readouterr().err
 
 
 # ---------------------------------------------------------------------------
@@ -541,9 +541,9 @@ def test_single_e2e_normal_path_download_to_staged(tmp_path: Path) -> None:
     import httpx
     from PIL import Image
 
-    from compsval.ingest.floorplan_asset import ASSET_STAGED_FILENAME
-    from compsval.ingest.floorplan_download import run_download
-    from compsval.ingest.floorplan_selection import _normalize_https
+    from gz_property_valuation.ingest.floorplan_asset import ASSET_STAGED_FILENAME
+    from gz_property_valuation.ingest.floorplan_download import run_download
+    from gz_property_valuation.ingest.floorplan_selection import _normalize_https
 
     def _jpeg(w: int, h: int) -> bytes:
         buf = io.BytesIO()
@@ -595,6 +595,6 @@ def test_single_e2e_normal_path_download_to_staged(tmp_path: Path) -> None:
 def _manifest_file_obj(sel_path: Path) -> SelectionManifest:
     import json
 
-    from compsval.ingest.floorplan_selection import SelectionManifest
+    from gz_property_valuation.ingest.floorplan_selection import SelectionManifest
 
     return SelectionManifest.model_validate(json.loads(sel_path.read_text(encoding="utf-8")))

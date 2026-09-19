@@ -10,7 +10,7 @@ from pathlib import Path
 import pytest
 from pydantic import ValidationError
 
-from compsval.ingest.floorplan_ocr_contract import (
+from gz_property_valuation.ingest.floorplan_ocr_contract import (
     DASHSCOPE_API_KEY_ENV,
     DASHSCOPE_BEIJING_ENDPOINT,
     DEFAULT_BASELINE_COST_PER_IMAGE_YUAN,

@@ -17,20 +17,20 @@ from typing import Any
 import httpx
 from PIL import Image
 
-from compsval.ingest.floorplan_asset import (
+from gz_property_valuation.ingest.floorplan_asset import (
     build_asset_manifest,
 )
-from compsval.ingest.floorplan_download import (
+from gz_property_valuation.ingest.floorplan_download import (
     run_download,
 )
-from compsval.ingest.floorplan_e2e import (
+from gz_property_valuation.ingest.floorplan_e2e import (
     SUBSET_FILENAME,
     build_download_quality_report,
     build_subset_manifest,
     parse_sample_list,
     register_samples,
 )
-from compsval.ingest.floorplan_selection import (
+from gz_property_valuation.ingest.floorplan_selection import (
     SelectionEntry,
     SelectionManifest,
 )
@@ -53,7 +53,7 @@ def _sha(b: bytes) -> str:
 
 
 def _entry(rid: str, row: int, seq: int, http_url: str) -> SelectionEntry:
-    from compsval.ingest.floorplan_selection import _normalize_https
+    from gz_property_valuation.ingest.floorplan_selection import _normalize_https
 
     return SelectionEntry(
         source_record_id=rid,
@@ -324,7 +324,7 @@ def _e2e_bundle(
     asset_run = build_asset_manifest(dl_run_dir, raw_dir, batch_id="e2e-batch")
     asset_batch_dir = raw_dir / "batch_id=e2e-batch"
 
-    from compsval.ingest.floorplan_e2e import E2eBundle
+    from gz_property_valuation.ingest.floorplan_e2e import E2eBundle
 
     bundle = E2eBundle(
         created_at=datetime.now(UTC).isoformat(),
@@ -357,7 +357,7 @@ def _e2e_bundle(
 
 
 def test_quality_report_sample_sha256_match(tmp_path: Path) -> None:
-    from compsval.ingest.floorplan_selection import _normalize_https
+    from gz_property_valuation.ingest.floorplan_selection import _normalize_https
 
     j1 = _jpeg_bytes()
     d = _sample_dir(tmp_path, {"huxingtu_01.jpg": j1})
@@ -399,7 +399,7 @@ def test_quality_report_mismatch_detected(tmp_path: Path) -> None:
 
     from datetime import UTC, datetime
 
-    from compsval.ingest.floorplan_e2e import E2eBundle
+    from gz_property_valuation.ingest.floorplan_e2e import E2eBundle
 
     bundle = E2eBundle(
         created_at=datetime.now(UTC).isoformat(),
@@ -434,7 +434,7 @@ def test_quality_report_mismatch_detected(tmp_path: Path) -> None:
 
 
 def test_quality_report_json_and_md_same_frozen(tmp_path: Path) -> None:
-    from compsval.ingest.floorplan_selection import _normalize_https
+    from gz_property_valuation.ingest.floorplan_selection import _normalize_https
 
     j1 = _jpeg_bytes()
     d = _sample_dir(tmp_path, {"huxingtu_01.jpg": j1})
@@ -456,11 +456,11 @@ def test_quality_report_json_and_md_same_frozen(tmp_path: Path) -> None:
 
 
 def test_resolve_missing_assets_and_download_manifest(tmp_path: Path) -> None:
-    from compsval.ingest.floorplan_download import (
+    from gz_property_valuation.ingest.floorplan_download import (
         compute_asset_id,
         sale_record_key,
     )
-    from compsval.ingest.floorplan_e2e import (
+    from gz_property_valuation.ingest.floorplan_e2e import (
         build_download_manifest,
         resolve_missing_assets,
     )
@@ -487,7 +487,7 @@ def test_resolve_missing_assets_and_download_manifest(tmp_path: Path) -> None:
 
 
 def test_collect_existing_downloaded_asset_ids(tmp_path: Path) -> None:
-    from compsval.ingest.floorplan_e2e import (
+    from gz_property_valuation.ingest.floorplan_e2e import (
         collect_existing_downloaded_asset_ids,
     )
 
@@ -511,7 +511,7 @@ def test_collect_existing_downloaded_asset_ids(tmp_path: Path) -> None:
 
 
 def test_aggregate_bundle_counts_cumulative() -> None:
-    from compsval.ingest.floorplan_e2e import aggregate_bundle_counts
+    from gz_property_valuation.ingest.floorplan_e2e import aggregate_bundle_counts
 
     m1 = {"assets": [{"asset_status": "DOWNLOADED"}, {"asset_status": "IMAGE_INVALID"}]}
     m2 = {"assets": [{"asset_status": "DOWNLOADED"}]}
@@ -524,7 +524,7 @@ def test_quality_report_aggregates_multiple_batches(tmp_path: Path) -> None:
     """累计质量报告：跨多个 batch manifest 平铺资产、聚合计数，MD/JSON 同源。"""
     from datetime import UTC, datetime
 
-    from compsval.ingest.floorplan_e2e import (
+    from gz_property_valuation.ingest.floorplan_e2e import (
         E2eBundle,
         SampleRegistration,
         build_download_quality_report,
